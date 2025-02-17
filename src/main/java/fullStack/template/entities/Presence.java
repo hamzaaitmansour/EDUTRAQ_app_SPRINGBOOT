@@ -1,5 +1,7 @@
 package fullStack.template.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fullStack.template.models.Etudiant;
 import fullStack.template.models.UserApp;
 import jakarta.persistence.*;
 
@@ -12,11 +14,22 @@ public class Presence {
     private Long id;
     private String statut;
     private String remarque;
+    private int week;
     private LocalDate date;
 
     @ManyToOne
     private Seance seance;
     @ManyToOne
-    private UserApp userApp;
+    private Etudiant etudiant;
+    @ManyToOne
+    private  Archive archive;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "presence")
+    private JustificationAbsence justificationAbsence;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "presence")
+    private Feedback feedback;
 
 }

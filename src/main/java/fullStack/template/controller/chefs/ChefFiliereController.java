@@ -2,6 +2,7 @@ package fullStack.template.controller.chefs;
 
 import fullStack.template.dto.CheckSalle;
 import fullStack.template.dto.SeanceRequest;
+import fullStack.template.dto.SeanceResponse;
 import fullStack.template.entities.Salle;
 import fullStack.template.entities.Seance;
 import fullStack.template.service.SalleService;
@@ -33,7 +34,7 @@ public class ChefFiliereController {
           return new ResponseEntity<>(seanceService.addSeance(seance), HttpStatus.CREATED);
       }
     // delete seance
-    @PostMapping("/seance/{id}")
+    @DeleteMapping("/seance/{id}")
     public ResponseEntity<?> deleteSeance(@PathVariable Long id)
     {
         seanceService.deleteSeance(id);
@@ -48,7 +49,7 @@ public class ChefFiliereController {
 
     // get All seance of filiere
     @GetMapping("/seance/{id}")
-    public ResponseEntity<List<Seance>> getAllSeanceByFiliere(@PathVariable Long id)
+    public ResponseEntity<List<SeanceResponse>> getAllSeanceByFiliere(@PathVariable Long id)
     {
         return new ResponseEntity<>(seanceService.getAllByFiliere(id),HttpStatus.OK);
     }

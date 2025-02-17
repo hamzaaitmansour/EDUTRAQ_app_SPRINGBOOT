@@ -14,5 +14,5 @@ public class Feedback {
     private UserApp userApp;
 
     @OneToOne
-    private Seance seance;
+    private Presence presence;
 }

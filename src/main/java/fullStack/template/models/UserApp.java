@@ -48,9 +48,7 @@ public class UserApp {
     @JsonIgnore
     @OneToMany(mappedBy = "userApp", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JustificationAbsence> justifications;
-    @JsonIgnore
-    @OneToMany(mappedBy = "userApp", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Presence> presences;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "userApp", cascade = CascadeType.ALL, orphanRemoval = true)

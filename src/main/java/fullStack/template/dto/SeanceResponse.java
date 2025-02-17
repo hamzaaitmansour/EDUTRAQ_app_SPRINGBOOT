@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SeanceResponse {
-
+    private Long id;
     private String heure;
     private String jour;
     private String type;
-    private String matiere_nom;
+    private String matiere;
     private String prof_nom;
+    private String salle;
 
 }
