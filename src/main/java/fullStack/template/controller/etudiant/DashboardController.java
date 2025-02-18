@@ -3,15 +3,20 @@ package fullStack.template.controller.etudiant;
 import fullStack.template.dto.PresenceResponse;
 import fullStack.template.dto.SeanceResponse;
 import fullStack.template.entities.Notification;
+import fullStack.template.entities.Presence;
 import fullStack.template.entities.Seance;
 import fullStack.template.models.Etudiant;
 import fullStack.template.service.EtudiantService;
+import fullStack.template.service.NotificationService;
+import fullStack.template.service.PresenceServie;
 import fullStack.template.service.SeanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.temporal.IsoFields;
 import java.util.List;
 
 @RestController
@@ -21,6 +26,10 @@ public class DashboardController {
     private EtudiantService etudiantService;
     @Autowired
     private SeanceService seanceService;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private PresenceServie presenceServie;
     // emploit de temps
     @GetMapping("/emploit/{id}")
     public ResponseEntity<List<SeanceResponse>> getEmploit(@PathVariable Long id)
@@ -31,6 +40,12 @@ public class DashboardController {
         List<SeanceResponse> list =seanceService.getAllByFiliere(e.getFiliere_etudiant().getId());
         System.out.println("\n test 2   test 2\n\n");
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @GetMapping("/emails/vu/{id}")
+    public ResponseEntity<Notification> setVu(@PathVariable Long id)
+    {
+
+        return new ResponseEntity<>(notificationService.setVu(id),HttpStatus.ACCEPTED);
     }
     // reçu notifications
         // last 4 notifiactions non lues
@@ -49,9 +64,15 @@ public class DashboardController {
         }
 
     // dashboard reçois tous les presences de cette semaine
-    public ResponseEntity<List<PresenceResponse>>  getDashboardPresence()
+    @GetMapping("/dashboard/presence/{email}")
+    public ResponseEntity<List<Presence>>  getDashboardPresence(@PathVariable String email)
     {
-return null;
+        LocalDate date = LocalDate.now();
+
+        Etudiant etudiant=etudiantService.getByEmail(email);
+
+      return
+  new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
 
     }
 

@@ -72,4 +72,11 @@ public class EtudiantService {
 
         return reversedList.subList(0, Math.min(4, reversedList.size()));
     }
+
+    public Etudiant getByEmpreinte(String empreinte) {
+        return etudiantRepo.findByEmpreinte(empreinte);
+    }
+    public Etudiant getByEmail(String email) {
+        return etudiantRepo.findByEmail(email);
+    }
 }

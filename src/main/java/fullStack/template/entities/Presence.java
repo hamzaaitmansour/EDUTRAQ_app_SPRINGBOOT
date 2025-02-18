@@ -4,10 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import fullStack.template.models.Etudiant;
 import fullStack.template.models.UserApp;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Presence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +21,7 @@ public class Presence {
     private String statut;
     private String remarque;
     private int week;
-    private LocalDate date;
+    private int year;
 
     @ManyToOne
     private Seance seance;
