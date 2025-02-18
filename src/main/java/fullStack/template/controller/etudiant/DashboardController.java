@@ -1,5 +1,6 @@
 package fullStack.template.controller.etudiant;
 
+import fullStack.template.dto.PresenceHistoireRequest;
 import fullStack.template.dto.PresenceResponse;
 import fullStack.template.dto.SeanceResponse;
 import fullStack.template.entities.Notification;
@@ -65,19 +66,31 @@ public class DashboardController {
 
     // dashboard reçois tous les presences de cette semaine
     @GetMapping("/dashboard/presence/{email}")
-    public ResponseEntity<List<Presence>>  getDashboardPresence(@PathVariable String email)
+    public ResponseEntity<List<PresenceResponse>>  getDashboardPresence(@PathVariable String email)
     {
         LocalDate date = LocalDate.now();
 
         Etudiant etudiant=etudiantService.getByEmail(email);
+        System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere_etudiant().getNom());
 
       return
-  new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
+        new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
 
     }
 
-    // Profile j'ai email et je le donne le etudiant
+    // Presence of any date
+    @PostMapping("/presence/any")
+     public ResponseEntity<List<PresenceResponse>> getHistoirePresence(@RequestBody PresenceHistoireRequest p)
+    {
+        LocalDate date = p.getDate();
 
+        Etudiant etudiant=etudiantService.getByEmail(p.getEmail());
+        System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere_etudiant().getNom());
+
+        return
+                new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
+
+    }
 
 
     //
