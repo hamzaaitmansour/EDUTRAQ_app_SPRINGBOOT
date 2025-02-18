@@ -14,9 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // ou JOINED selon ton besoin
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-
+@Inheritance(strategy = InheritanceType.JOINED) // Utiliser JOINED pour des tables séparées
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class UserApp {
     @Id
@@ -41,19 +39,12 @@ public class UserApp {
     @OneToMany(mappedBy = "userApp", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "userApp", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Feedback> feedbacks;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "userApp", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JustificationAbsence> justifications;
 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "userApp", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Seance> seances;
 
-    @OneToOne(mappedBy = "userApp")
-    private Filiere filiere;
+
+
+
+
+
 }

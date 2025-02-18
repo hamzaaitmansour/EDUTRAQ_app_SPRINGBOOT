@@ -1,6 +1,8 @@
 package fullStack.template.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fullStack.template.models.ChefFiliere;
+import fullStack.template.models.Etudiant;
 import fullStack.template.models.UserApp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,9 +21,16 @@ public class Filiere {
     private Long id;
     private String nom;
     private int effectif;
+
     @JsonIgnore
     @OneToOne
-    private UserApp userApp;
+    private ChefFiliere chefFiliere;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "filiere")
     private List<Seance> seances;
+
+    @JsonIgnore
+    @OneToMany
+    private List<Etudiant> etudiants;
 }

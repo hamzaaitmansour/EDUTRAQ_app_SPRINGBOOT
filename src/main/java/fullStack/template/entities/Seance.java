@@ -1,6 +1,7 @@
 package fullStack.template.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fullStack.template.models.Etudiant;
 import fullStack.template.models.UserApp;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -37,9 +38,9 @@ public class Seance {
     private List<Presence> presences;
 
 
-    @JsonIgnore
-    @ManyToOne
-    private UserApp userApp;  // PROF
+    @ManyToMany(mappedBy = "seances")
+    private List<Etudiant> etudiants;
+
 
 
 
