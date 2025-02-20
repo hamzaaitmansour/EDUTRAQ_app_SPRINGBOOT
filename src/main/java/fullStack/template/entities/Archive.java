@@ -1,23 +1,25 @@
 package fullStack.template.entities;
 
-import fullStack.template.models.Etudiant;
-import fullStack.template.models.UserApp;
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.List;
+
 @Data
-@AllArgsConstructor
+@Entity
 @NoArgsConstructor
-public class Feedback {
+@AllArgsConstructor
+public class Archive {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private int week;
+    private  int annee;
 
-    private String commentaire;
+    @OneToMany(mappedBy = "archive")
+    private  List<Presence> presences;
 
-    @OneToOne
-    private Presence presence;
 }

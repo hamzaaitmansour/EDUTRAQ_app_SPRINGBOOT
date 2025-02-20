@@ -18,6 +18,7 @@ public class ControllerChefEtudiants {
 @PostMapping()
     public ResponseEntity<Etudiant> add(@Valid @RequestBody Etudiant etudiant)
     {
+        System.out.println("\n\n hey hey \n\n");
      return new ResponseEntity<>(etudiantService.addEtudiant(etudiant), HttpStatus.CREATED);
     }
 

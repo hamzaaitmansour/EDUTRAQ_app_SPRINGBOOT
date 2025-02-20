@@ -1,6 +1,7 @@
 package fullStack.template.service;
 
 import fullStack.template.entities.Filiere;
+import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.repository.FiliereRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,18 @@ public class FiliereService {
     {   filiereRepo.deleteById(id);
 
     }
-
+    public Filiere updateFiliere(Filiere filiere)
+    {
+        return filiereRepo.save(filiere);
+    }
 
     public List<Filiere> findAll()
     {
         return filiereRepo.findAll();
+    }
+
+    public Filiere findById(Long idFiliere) {
+        return filiereRepo.findById(idFiliere).orElseThrow(()->new EntityNotFoundException("Not found"));
     }
 
 }

@@ -1,25 +1,41 @@
 package fullStack.template.entities;
 
-import fullStack.template.models.UserApp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fullStack.template.models.Etudiant;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Presence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private StatutPresence statut;
+    private String statut;
     private String remarque;
+    private int week;
+    private int year;
 
     @ManyToOne
     private Seance seance;
+
     @ManyToOne
-    private UserApp userApp;
+    private Etudiant etudiant;
 
-}
+    @ManyToOne
+    private Archive archive; // Assure-toi d'avoir l'entité Archive
 
-enum StatutPresence {
-    PRESENT, ABSENT
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "justification_id")
+    private JustificationAbsence justificationAbsence;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "presence")
+    private Feedback feedback;
 }
