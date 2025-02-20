@@ -45,7 +45,7 @@ public class PresenceServie {
          List<PresenceResponse> listResponse=new ArrayList<>();
          for (Presence p:list)
          {
-          PresenceResponse rs= new PresenceResponse(p.getId(),p.getStatut(),p.getSeance().getHeure(),p.getSeance().getJour(),p.getSeance().getType(),p.getSeance().getMatiere().getNom(),p.getSeance().getUserApp().getFirstname());
+          PresenceResponse rs= new PresenceResponse(p.getId(),p.getStatut(),p.getSeance().getHeure(),p.getSeance().getJour(),p.getSeance().getType(),p.getSeance().getMatiere().getNom(),p.getSeance().getProfesseur().getFirstname());
            listResponse.add(rs);
          }
          return  listResponse;

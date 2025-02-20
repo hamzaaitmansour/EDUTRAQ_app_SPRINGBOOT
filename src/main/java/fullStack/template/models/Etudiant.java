@@ -1,20 +1,24 @@
 package fullStack.template.models;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fullStack.template.entities.*;
+import fullStack.template.entities.Feedback;
+import fullStack.template.entities.JustificationAbsence;
+import fullStack.template.entities.Presence;
+import fullStack.template.entities.Seance;
+import fullStack.template.entities.Filiere;
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import java.util.List;
-
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@DiscriminatorValue("ETUDIANT")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Etudiant extends UserApp {
-
     private String empreinte;
     private String cne;
     private String cni_etudiant;
@@ -27,9 +31,6 @@ public class Etudiant extends UserApp {
     private List<Presence> presences;
 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Feedback> feedbacks;
 
     @JsonIgnore
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -42,6 +43,4 @@ public class Etudiant extends UserApp {
             inverseJoinColumns = @JoinColumn(name = "seance_id")
     )
     private List<Seance> seances;
-
-
 }

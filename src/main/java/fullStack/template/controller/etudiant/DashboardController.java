@@ -38,7 +38,7 @@ public class DashboardController {
         System.out.println("\n\n\n\n\n"+id+"\n\n\n\n\n\n");
         Etudiant e=etudiantService.getEtudiantById(id);
         System.out.println("\n test test \n\n");
-        List<SeanceResponse> list =seanceService.getAllByFiliere(e.getFiliere_etudiant().getId());
+        List<SeanceResponse> list =seanceService.getAllByFiliere(e.getFiliere().getId());
         System.out.println("\n test 2   test 2\n\n");
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -71,7 +71,7 @@ public class DashboardController {
         LocalDate date = LocalDate.now();
 
         Etudiant etudiant=etudiantService.getByEmail(email);
-        System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere_etudiant().getNom());
+        System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere().getNom());
 
       return
         new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
@@ -85,7 +85,7 @@ public class DashboardController {
         LocalDate date = p.getDate();
 
         Etudiant etudiant=etudiantService.getByEmail(p.getEmail());
-        System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere_etudiant().getNom());
+        System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere().getNom());
 
         return
                 new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);

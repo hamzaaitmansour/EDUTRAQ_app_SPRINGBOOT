@@ -14,6 +14,6 @@ public class SeanceRequest {
     private String type;
     private Long filiere_id;
     private String matiere_nom;
-    private int prof_id;
+    private Long prof_id;
     private String salle_nom;
 }

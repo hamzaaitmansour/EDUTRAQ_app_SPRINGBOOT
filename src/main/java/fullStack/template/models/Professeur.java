@@ -1,8 +1,11 @@
 package fullStack.template.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import fullStack.template.entities.Notification;
-import jakarta.persistence.*;
+import fullStack.template.entities.Matiere;
+import fullStack.template.entities.Seance;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,19 +15,16 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@DiscriminatorValue("PROFESSEUR")
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // ou JOINED selon ton besoin
-@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-
-
-public class Professeur extends UserApp{
+public class Professeur extends UserApp {
     private String cni_prof;
     private int apogee;
+    @ManyToMany(mappedBy = "professeurs")
+    private List<Matiere> matieres;
+    @OneToMany(mappedBy = "professeur", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Seance> seances;
 
 
 }

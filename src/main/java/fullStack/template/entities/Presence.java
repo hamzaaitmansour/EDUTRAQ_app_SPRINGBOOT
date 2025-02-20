@@ -2,13 +2,10 @@ package fullStack.template.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fullStack.template.models.Etudiant;
-import fullStack.template.models.UserApp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Entity
 @Data
@@ -18,6 +15,7 @@ public class Presence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String statut;
     private String remarque;
     private int week;
@@ -25,17 +23,19 @@ public class Presence {
 
     @ManyToOne
     private Seance seance;
+
     @ManyToOne
     private Etudiant etudiant;
+
     @ManyToOne
-    private  Archive archive;
+    private Archive archive; // Assure-toi d'avoir l'entité Archive
 
     @JsonIgnore
-    @OneToOne(mappedBy = "presence")
+    @OneToOne
+    @JoinColumn(name = "justification_id")
     private JustificationAbsence justificationAbsence;
 
     @JsonIgnore
     @OneToOne(mappedBy = "presence")
     private Feedback feedback;
-
 }

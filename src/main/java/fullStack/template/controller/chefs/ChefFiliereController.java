@@ -3,8 +3,10 @@ package fullStack.template.controller.chefs;
 import fullStack.template.dto.CheckSalle;
 import fullStack.template.dto.SeanceRequest;
 import fullStack.template.dto.SeanceResponse;
+import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Salle;
 import fullStack.template.entities.Seance;
+import fullStack.template.models.ChefFiliere;
 import fullStack.template.service.SalleService;
 import fullStack.template.service.SeanceService;
 import jakarta.validation.Valid;
@@ -26,10 +28,13 @@ public class ChefFiliereController {
 
      @Autowired
      private SalleService salleService;
+
+
     // ajouter seance
       @PostMapping("/seance")
     public ResponseEntity<Seance> addSeance(@Valid  @RequestBody SeanceRequest seance)
       {
+
           System.out.println(seance.getJour()+"\n\n");
           return new ResponseEntity<>(seanceService.addSeance(seance), HttpStatus.CREATED);
       }

@@ -24,7 +24,7 @@ public class EtudiantService {
     public Etudiant addEtudiant(Etudiant etudiant)
     { // add to filiere 1 Info Test
 
-        etudiant.setFiliere_etudiant(filiereRepo.findById(1L).get());
+        etudiant.setFiliere(filiereRepo.findById(1L).get());
 
   etudiant.setPassword(encoder.encode(etudiant.getPassword()));
         return etudiantRepo.save(etudiant);

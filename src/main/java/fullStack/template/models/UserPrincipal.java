@@ -3,7 +3,6 @@ package fullStack.template.models;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -16,7 +15,8 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + userApp.getRole())); // Ajout du rôle
+        // Le rôle est préfixé par "ROLE_"
+        return List.of(new SimpleGrantedAuthority("ROLE_" + userApp.getRole()));
     }
 
     @Override
@@ -26,24 +26,21 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userApp.getEmail(); // Identifiant basé sur l'email
+        return userApp.getEmail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
     @Override
     public boolean isEnabled() {
         return true;
