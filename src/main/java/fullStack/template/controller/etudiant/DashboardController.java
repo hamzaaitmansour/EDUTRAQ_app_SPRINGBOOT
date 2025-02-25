@@ -65,12 +65,12 @@ public class DashboardController {
         }
 
     // dashboard reçois tous les presences de cette semaine
-    @GetMapping("/dashboard/presence/{email}")
-    public ResponseEntity<List<PresenceResponse>>  getDashboardPresence(@PathVariable String email)
+    @GetMapping("/dashboard/presence/{id}")
+    public ResponseEntity<List<PresenceResponse>>  getDashboardPresence(@PathVariable Long id)
     {
         LocalDate date = LocalDate.now();
 
-        Etudiant etudiant=etudiantService.getByEmail(email);
+        Etudiant etudiant=etudiantService.getEtudiantById(id);
         System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere().getNom());
 
       return
@@ -83,16 +83,13 @@ public class DashboardController {
      public ResponseEntity<List<PresenceResponse>> getHistoirePresence(@RequestBody PresenceHistoireRequest p)
     {
         LocalDate date = p.getDate();
-
-        Etudiant etudiant=etudiantService.getByEmail(p.getEmail());
+        System.out.println("\n\n\n  "+date+" \n\n\n");
+        Etudiant etudiant=etudiantService.getEtudiantById(p.getId());
         System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere().getNom());
-
         return
-                new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
+          new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
 
     }
 
-
-    //
 
 }

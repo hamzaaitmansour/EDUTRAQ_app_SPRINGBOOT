@@ -33,11 +33,11 @@ public Seance addSeance(SeanceRequest s)
         System.out.println("\n \n \n \n seance service working ... \n \n \n \n ");
        seance.setHeure(s.getHeure());
        seance.setJour(s.getJour());
-       seance.setMatiere(matiereRepo.findMatiereByNom(s.getMatiere_nom()));
-       seance.setFiliere(filiererepo.findById(s.getFiliere_id()).get());
+       seance.setMatiere(matiereRepo.findById(s.getId_matiere()).get());
+       seance.setFiliere(filiererepo.findById(s.getId_filiere()).get());
        seance.setType(s.getType());
-       seance.setProfesseur(profRepo.findById(s.getProf_id()).get());
-       seance.setSalle(salleRepo.findSalleByNom(s.getSalle_nom()));
+       seance.setProfesseur(profRepo.findById(s.getId_user()).get());
+       seance.setSalle(salleRepo.findById(s.getId_salle()).get());
         seanceRepo.save(seance);
 
     }catch(EntityAlreadyExistException e)

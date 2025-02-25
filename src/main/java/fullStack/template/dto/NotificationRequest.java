@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NotificationRequest {
     private String message;
-    private int id;
+    private Long id;
+
 }

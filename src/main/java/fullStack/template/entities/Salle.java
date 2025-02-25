@@ -18,6 +18,7 @@ public class Salle {
 
     private String nom;
     private int capacite;
+    private String localisation;
 
     @JsonIgnore
     @OneToMany(mappedBy = "salle")

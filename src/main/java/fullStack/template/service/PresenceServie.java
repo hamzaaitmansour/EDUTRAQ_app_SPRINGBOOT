@@ -40,14 +40,16 @@ public class PresenceServie {
          return presenceRepo.save(presence);
      }
      public List<PresenceResponse> getPres(Etudiant etudiant,int week ,int year)
-     {  year=2025;
+     {
+         System.out.println("\n\n\nRecherche des etusiants par week :"+week+" et etudiant "+etudiant.getEmail()+" year "+year);
          List<Presence> list=  presenceRepo.getPresencesByWeekAndEtudiantAndYear(week,etudiant,year);
          List<PresenceResponse> listResponse=new ArrayList<>();
          for (Presence p:list)
          {
-          PresenceResponse rs= new PresenceResponse(p.getId(),p.getStatut(),p.getSeance().getHeure(),p.getSeance().getJour(),p.getSeance().getType(),p.getSeance().getMatiere().getNom(),p.getSeance().getProfesseur().getFirstname());
+          PresenceResponse rs= new PresenceResponse(p.getId(),p.getStatut(),p.getSeance().getHeure(),p.getSeance().getJour(),p.getSeance().getType(),p.getSeance().getMatiere().getNom(),p.getSeance().getProfesseur().getFirstname(),LocalDate.of(2026,5,29));
            listResponse.add(rs);
          }
+
          return  listResponse;
      }
 

@@ -26,6 +26,9 @@ public class FiliereService {
     }
     public Filiere updateFiliere(Filiere filiere)
     {
+        Filiere f = filiereRepo.findById(filiere.getId()).get();
+        f.setNom(filiere.getNom());
+        f.setEffectif(filiere.getEffectif());
         return filiereRepo.save(filiere);
     }
 
@@ -35,6 +38,7 @@ public class FiliereService {
     }
 
     public Filiere findById(Long idFiliere) {
+
         return filiereRepo.findById(idFiliere).orElseThrow(()->new EntityNotFoundException("Not found"));
     }
 

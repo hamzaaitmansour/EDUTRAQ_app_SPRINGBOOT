@@ -2,6 +2,7 @@ package fullStack.template.service;
 
 import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Matiere;
+import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.repository.MatiereRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,15 +20,19 @@ public class MatiereService {
     {
         return matiereRepo.save(matiere);
     }
-    public void deleteMatiere(String nom) throws Exception {
-        Matiere m = matiereRepo.findMatiereByNom(nom);
-        if (m == null) {
-            throw new Exception("Matière avec le nom '" + nom + "' non trouvée");
-        }
-        matiereRepo.delete(m);
+    public void deleteMatiere(Long id) throws Exception {
+
+        matiereRepo.deleteById(id);
 
     }
+    public Matiere updateMatiere(Matiere matiere)
+    {    Matiere m = matiereRepo.findById(matiere.getId()).orElseThrow(()->new RuntimeException("not found"));
+        m.setNom(matiere.getNom());
 
+
+
+        return matiereRepo.save(m);
+    }
     public List<Matiere> findAll()
     {
         return matiereRepo.findAll();

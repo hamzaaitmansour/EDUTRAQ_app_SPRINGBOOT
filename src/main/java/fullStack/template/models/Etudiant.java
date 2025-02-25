@@ -22,6 +22,8 @@ public class Etudiant extends UserApp {
     private String empreinte;
     private String cne;
     private String cni_etudiant;
+    @Lob
+    private byte[] profile;
 
     @ManyToOne
     private Filiere filiere;

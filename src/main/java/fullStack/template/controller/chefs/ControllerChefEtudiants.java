@@ -1,5 +1,6 @@
 package fullStack.template.controller.chefs;
 
+import fullStack.template.dto.Image;
 import fullStack.template.models.Etudiant;
 import fullStack.template.service.EtudiantService;
 import jakarta.validation.Valid;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -16,10 +18,32 @@ public class ControllerChefEtudiants {
 @Autowired
     private EtudiantService etudiantService;
 @PostMapping()
-    public ResponseEntity<Etudiant> add(@Valid @RequestBody Etudiant etudiant)
+    public ResponseEntity<String> add( @RequestBody Image etudiant)
     {
         System.out.println("\n\n hey hey \n\n");
+        System.out.println(etudiant.toString());
      return new ResponseEntity<>(etudiantService.addEtudiant(etudiant), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/etudiant/{id}")
+    public ResponseEntity<Image> getEtudiant(@PathVariable Long id) {
+        // Récupérer l'entité ImageEntity à partir de l'ID
+        Etudiant imageEntity = etudiantService.getEtudiantById(id);
+
+        if (imageEntity == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+
+        Image response= new Image();
+
+        response.setEmail(imageEntity.getEmail());
+
+        response.setPassword(imageEntity.getPassword());
+
+        response.setProfile("data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imageEntity.getProfile()));
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @GetMapping()
@@ -29,8 +53,9 @@ public class ControllerChefEtudiants {
     }
 
     @GetMapping("/filiere/{id}")
-    public ResponseEntity<List<Etudiant>> getAllByFiliere(@PathVariable Long id)
+    public ResponseEntity<List<Image>> getAllByFiliere(@PathVariable Long id)
     {
+        System.out.println("Requete pour get etudiants ");
         return new ResponseEntity<>(etudiantService.getAllEtudiantsByFiliere(id),HttpStatus.OK);
     }
     @PutMapping()

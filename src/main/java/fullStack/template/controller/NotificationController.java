@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/api/notifications")
 public class NotificationController {
@@ -27,10 +29,10 @@ public class NotificationController {
     @PostMapping("/")
     public ResponseEntity<Notification> add(@RequestBody NotificationRequest n)
     {
-
+        System.out.println("\n \n \n Notifications Add ...\n "+n.getId()+"\n \n ");
         UserApp user= userAppRepo.findById(n.getId()).orElseThrow(()->new EntityNotFoundException("User Not Found"));
 
-        Notification not =new Notification(null,n.getMessage(),false,user);
+        Notification not =new Notification(null,n.getMessage(),false,"Schedule", LocalDate.now(),user);
 
         return new ResponseEntity<>(notificationService.addNotification(not), HttpStatus.CREATED);
     }

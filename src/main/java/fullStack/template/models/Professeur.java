@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Professeur extends UserApp {
     private String cni_prof;
-    private int apogee;
+    private String apogee;
     @ManyToMany(mappedBy = "professeurs")
     private List<Matiere> matieres;
     @OneToMany(mappedBy = "professeur", cascade = CascadeType.ALL, orphanRemoval = true)
