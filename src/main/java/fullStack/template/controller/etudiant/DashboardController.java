@@ -3,6 +3,7 @@ package fullStack.template.controller.etudiant;
 import fullStack.template.dto.PresenceHistoireRequest;
 import fullStack.template.dto.PresenceResponse;
 import fullStack.template.dto.SeanceResponse;
+import fullStack.template.dto.StatResponse;
 import fullStack.template.entities.Notification;
 import fullStack.template.entities.Presence;
 import fullStack.template.entities.Seance;
@@ -89,6 +90,18 @@ public class DashboardController {
         return
           new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
 
+    }
+
+    @GetMapping("/stat/{id}")
+    public List<StatResponse> getStat(@PathVariable Long id)
+    {
+        return presenceServie.getStat(id);
+    }
+
+    @GetMapping("/seance/next/{id}")
+    public ResponseEntity<SeanceResponse> getNextSeance(@PathVariable Long id)
+    {
+        return new ResponseEntity<>(seanceService.getNextSeance(id),HttpStatus.OK);
     }
 
 

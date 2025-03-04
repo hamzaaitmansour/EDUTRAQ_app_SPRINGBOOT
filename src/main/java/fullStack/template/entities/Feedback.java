@@ -1,7 +1,7 @@
 package fullStack.template.entities;
 
-import fullStack.template.models.Etudiant;
-import fullStack.template.models.UserApp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fullStack.template.entities.Presence;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,9 +15,10 @@ public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String commentaire;
 
-    @OneToOne
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "presence_id") // 🔥 Corrige le mapping
     private Presence presence;
 }

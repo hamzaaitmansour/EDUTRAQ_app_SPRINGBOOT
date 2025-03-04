@@ -1,8 +1,11 @@
 package fullStack.template.service;
 
+import fullStack.template.models.UserApp;
+import fullStack.template.repository.UserAppRepo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private final String secretKey;
+    @Autowired
+    private UserAppRepo userAppRepo;
 
     public JwtService() {
         try {
@@ -33,7 +38,10 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        UserApp user = userAppRepo.findByEmail(userDetails.getUsername());
         claims.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
+        claims.put("id",user.getId());
+        claims.put("nom",user.getFirstname()+" "+user.getLastname());
         return Jwts.builder()
                 .setClaims(claims) // Add claims to the token
                 .setSubject(userDetails.getUsername()) // Set the subject (e.g., username)

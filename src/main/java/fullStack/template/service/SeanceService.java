@@ -7,12 +7,17 @@ import fullStack.template.entities.Salle;
 import fullStack.template.entities.Seance;
 import fullStack.template.exception.EntityAlreadyExistException;
 import fullStack.template.exception.EntityNotFoundException;
+import fullStack.template.models.Etudiant;
 import fullStack.template.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class SeanceService {
@@ -26,6 +31,8 @@ public class SeanceService {
     private ProfRepo profRepo;
     @Autowired
     private SalleRepo salleRepo;
+    @Autowired
+    private  EtudiantRepo etudiantRepo;
 
 public Seance addSeance(SeanceRequest s)
 {   Seance seance=new Seance();
@@ -74,5 +81,27 @@ public Seance updateSeance(Seance seance)
 
     public List<Seance> getSeances(String heure,String jour) {
     return seanceRepo.findSeancesByHeureAndJour(heure,jour);
+    }
+
+    public SeanceResponse getNextSeance(Long id) {
+        Etudiant e =etudiantRepo.findById(id).orElseThrow(()->new EntityNotFoundException("Not found"));
+        List<Seance> seances =  seanceRepo.findSeancesByFiliere(e.getFiliere());
+        LocalDateTime dateTime = LocalDateTime.now();
+        int heure = dateTime.getHour();
+        String jour = dateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.FRANCE).toLowerCase();
+
+        for (Seance s : seances)
+        {   if(s.getJour().toLowerCase().equals(jour))
+            {
+                switch (heure)
+                {
+                   // case (heure>8 && heure<10)
+
+                }
+            }
+
+        }
+return  null;
+
     }
 }

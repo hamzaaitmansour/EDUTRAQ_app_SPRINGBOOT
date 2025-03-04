@@ -1,5 +1,7 @@
 package fullStack.template.service;
 
+import fullStack.template.dto.Image;
+import fullStack.template.dto.JustificationRequest;
 import fullStack.template.entities.JustificationAbsence;
 import fullStack.template.entities.Presence;
 import fullStack.template.exception.EntityNotFoundException;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Base64;
 
 @Service
 public class JustificationService {
@@ -24,29 +27,37 @@ public class JustificationService {
     private PresenceRepo presenceRepo;
 
 
-    public void add(byte[] fileContent, String fileName, String contentType,String description,Long id_etudiant,Long id_presence) {
+    public void add(JustificationRequest js) {
+            try {JustificationAbsence jAbsence=new JustificationAbsence();
+                if(js.getFile()!=null){
+                String profileData = js.getFile();
+                if (profileData == null || profileData.isEmpty()) {
+                    throw new IllegalArgumentException("Justification image data is missing");
+                }
 
+                // Split the data URL if present
+                String[] parts = profileData.split(",");
+                String base64Image = parts.length > 1 ? parts[1] : parts[0];
 
-        // Création d'une nouvelle instance de JustificationAbsence
-        try {
-            Etudiant e =etudiantService.getEtudiant(id_etudiant);
-            Presence p=presenceRepo.findById(id_presence).orElseThrow(()->new EntityNotFoundException("Presence not found"));
+                // Decode the Base64 string
+                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+                    jAbsence.setDocument(imageBytes);
+                }
 
-            JustificationAbsence justification = new JustificationAbsence();
-            justification.setDescription(description);
-            justification.setDocument(fileContent);
-            justification.setFileName(fileName);
-            justification.setContentType(contentType);
-            justification.setEtudiant(e);
-            justification.setPresence(p);
+                Etudiant e = etudiantService.getEtudiant(js.getEtudiant_id());
+                Presence p = presenceRepo.findById(js.getPresence_id()).orElseThrow(()->new RuntimeException("Not found "));
 
-            // Sauvegarde dans la base de données
-            justificationRepo.save(justification);
+                jAbsence.setPresence(p);
+                jAbsence.setEtudiant(e);
+                jAbsence.setDescription(js.getDescription());
 
-        }catch (Exception e)
-        {
-            System.out.println(e.getMessage());
+                justificationRepo.save(jAbsence);
+
+            } catch (IllegalArgumentException e) {
+                // Handle decoding errors
+                throw new RuntimeException("Invalid Base64 image data", e);
+            }
+
         }
-    }
 
 }

@@ -2,6 +2,7 @@ package fullStack.template.service;
 
 import fullStack.template.dto.PresenceRequest;
 import fullStack.template.dto.PresenceResponse;
+import fullStack.template.dto.StatResponse;
 import fullStack.template.entities.Presence;
 import fullStack.template.entities.Seance;
 import fullStack.template.exception.EntityNotFoundException;
@@ -53,5 +54,24 @@ public class PresenceServie {
          return  listResponse;
      }
 
+
+    public List<StatResponse> getStat(Long id) {
+        Etudiant e = etudiantRepo.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+        List<Seance> seances = seanceRepo.findSeancesByFiliere(e.getFiliere());
+        List<StatResponse> statResponses = new ArrayList<>();
+
+        for (Seance s : seances) {
+            Double absencePercentage = presenceRepo.getAbsencePercentageBySeance(s.getId());
+
+            if (absencePercentage != null) {
+                StatResponse statResponse = new StatResponse();
+                statResponse.setMatiere(s.getMatiere().getNom());
+                statResponse.setStat(absencePercentage.floatValue());
+                statResponses.add(statResponse);
+            }
+        }
+
+        return statResponses;
+    }
 
 }
