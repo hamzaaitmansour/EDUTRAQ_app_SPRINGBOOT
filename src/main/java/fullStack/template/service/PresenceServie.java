@@ -36,6 +36,7 @@ public class PresenceServie {
          System.out.println("\n\n\n hy 1\n\n");
          Seance seance=seanceRepo.findById(b.getId_seance()).orElseThrow(()->new EntityNotFoundException("Seance not found"));
          LocalDate daate=LocalDate.now();
+
          int week =daate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
          Presence presence=new Presence(null,b.getStatut(),b.getRemarque(),week,2025,seance,e,null,null,null);
          return presenceRepo.save(presence);
@@ -74,4 +75,12 @@ public class PresenceServie {
         return statResponses;
     }
 
+    public void addAll(List<PresenceRequest> prs) {
+
+         for (PresenceRequest p : prs)
+         {
+             addP(p);
+         }
+
+    }
 }

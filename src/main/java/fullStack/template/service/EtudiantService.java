@@ -3,10 +3,12 @@ package fullStack.template.service;
 import fullStack.template.dto.Image;
 import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Notification;
+import fullStack.template.entities.Seance;
 import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.models.Etudiant;
 import fullStack.template.repository.EtudiantRepo;
 import fullStack.template.repository.FiliereRepo;
+import fullStack.template.repository.SeanceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ import java.util.List;
 public class EtudiantService {
     @Autowired
     private EtudiantRepo etudiantRepo;
+    @Autowired
+    private SeanceRepo seanceRepo;
     @Autowired
     private FiliereRepo filiereRepo;
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -146,5 +150,11 @@ public class EtudiantService {
     }
     public Etudiant getByEmail(String email) {
         return etudiantRepo.findByEmail(email);
+    }
+
+    public List<Etudiant> getAllByBySeance(Long id) {
+        Seance seance=seanceRepo.findById(id).orElseThrow(()->new EntityNotFoundException("Not Found"));
+        Filiere filiere= seance.getFiliere();
+        return etudiantRepo.findEtudiantsByFiliere(filiere);
     }
 }

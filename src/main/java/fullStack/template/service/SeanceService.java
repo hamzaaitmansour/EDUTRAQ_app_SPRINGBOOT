@@ -8,6 +8,7 @@ import fullStack.template.entities.Seance;
 import fullStack.template.exception.EntityAlreadyExistException;
 import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.models.Etudiant;
+import fullStack.template.models.Professeur;
 import fullStack.template.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public List<SeanceResponse> getAllByFiliere(Long id)
     }
     return sr;
 }
-public Seance updateSeance(Seance seance)
+    public Seance updateSeance(Seance seance)
 {
     return seanceRepo.save(seance);
 }
@@ -83,6 +84,19 @@ public Seance updateSeance(Seance seance)
     return seanceRepo.findSeancesByHeureAndJour(heure,jour);
     }
 
+    public List<SeanceResponse> getSeancesByProf(Long id )
+    {
+        Professeur prof=profRepo.findById(id).orElseThrow(()->new EntityNotFoundException("Nor found"));
+        List<Seance> seances=seanceRepo.findAllByProfesseur(prof);
+        List<SeanceResponse> sr=new ArrayList<>();
+        for(Seance e : seances)
+        {
+            SeanceResponse r=new SeanceResponse(e.getId(),e.getHeure(),e.getJour(),e.getType(),e.getMatiere().getNom(),e.getProfesseur().getFirstname()+e.getProfesseur().getLastname(),e.getSalle().getNom());
+            sr.add(r);
+        }
+        return sr;
+
+    }
     public SeanceResponse getNextSeance(Long id) {
         Etudiant e =etudiantRepo.findById(id).orElseThrow(()->new EntityNotFoundException("Not found"));
         List<Seance> seances =  seanceRepo.findSeancesByFiliere(e.getFiliere());
