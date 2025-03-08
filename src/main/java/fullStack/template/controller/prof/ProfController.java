@@ -1,7 +1,9 @@
 package fullStack.template.controller.prof;
 
+import fullStack.template.dto.EtudiantResponsedesktop;
 import fullStack.template.dto.PresenceRequest;
 import fullStack.template.dto.SeanceResponse;
+import fullStack.template.entities.Matiere;
 import fullStack.template.entities.Presence;
 import fullStack.template.models.Etudiant;
 import fullStack.template.service.EtudiantService;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -42,9 +45,14 @@ public class ProfController {
     {
         return new ResponseEntity<>(seanceService.getSeancesByProf(id),HttpStatus.OK);
     }
+    @GetMapping("/matieres/{id}")
+    public ResponseEntity<List<Matiere>> findAllMatieresByProf(@PathVariable  Long id)
+    {
+        return new ResponseEntity<>(seanceService.getMatieresByProf(id),HttpStatus.OK);
+    }
 
     @GetMapping("/etudiants/{id}")
-    public ResponseEntity<List<Etudiant>> findAllEtudiantsBySeance(@PathVariable  Long id)
+    public ResponseEntity<List<EtudiantResponsedesktop>> findAllEtudiantsBySeance(@PathVariable  Long id)
     {
         return new ResponseEntity<>(etudiantService.getAllByBySeance(id),HttpStatus.OK);
     }

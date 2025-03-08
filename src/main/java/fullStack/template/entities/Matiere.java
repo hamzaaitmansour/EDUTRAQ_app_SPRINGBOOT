@@ -25,12 +25,6 @@ public class Matiere {
     @OneToMany(mappedBy = "matiere")
     private List<Seance> seances;
 
-    @ManyToMany
-    @JoinTable(
-            name = "matiere_professeur",
-            joinColumns = @JoinColumn(name = "matiere_id"),
-            inverseJoinColumns = @JoinColumn(name = "professeur_id")
-    )
-    private List<Professeur> professeurs;
+
 
 }

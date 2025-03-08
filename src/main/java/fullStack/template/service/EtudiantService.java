@@ -1,5 +1,6 @@
 package fullStack.template.service;
 
+import fullStack.template.dto.EtudiantResponsedesktop;
 import fullStack.template.dto.Image;
 import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Notification;
@@ -152,9 +153,25 @@ public class EtudiantService {
         return etudiantRepo.findByEmail(email);
     }
 
-    public List<Etudiant> getAllByBySeance(Long id) {
+    public List<EtudiantResponsedesktop> getAllByBySeance(Long id) {
         Seance seance=seanceRepo.findById(id).orElseThrow(()->new EntityNotFoundException("Not Found"));
-        Filiere filiere= seance.getFiliere();
-        return etudiantRepo.findEtudiantsByFiliere(filiere);
+        List<Etudiant> etudiants= etudiantRepo.findEtudiantsByFiliere(seance.getFiliere());
+        List<EtudiantResponsedesktop> etudDesktop=new ArrayList<>();
+        for (Etudiant e : etudiants)
+        {
+            EtudiantResponsedesktop es=new EtudiantResponsedesktop();
+            es.setCne(e.getCne());
+            // es.setProfile(e.getProfile());
+            es.setId(e.getId());
+            es.setNom(e.getFirstname());
+            es.setPrenom(e.getLastname());
+            etudDesktop.add(es);
+        }
+        return etudDesktop;
+        // Notifications
+        // Justifications
+        // Historique
+        // Presence
+        //
     }
 }

@@ -101,7 +101,7 @@ public class DashboardController {
     @GetMapping("/seance/next/{id}")
     public ResponseEntity<SeanceResponse> getNextSeance(@PathVariable Long id)
     {
-        return new ResponseEntity<>(seanceService.getNextSeance(id),HttpStatus.OK);
+        return new ResponseEntity<>(seanceService.getNextresponseSeance(id),HttpStatus.OK);
     }
 
 

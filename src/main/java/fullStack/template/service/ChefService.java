@@ -31,7 +31,7 @@ public class ChefService {
         c.setEmail(p.getEmail());
         c.setFirstname(p.getFirstname());
         c.setLastname(p.getLastname());
-        c.setMatieres(p.getMatieres());
+
         c.setSeances(p.getSeances());
         c.setId(p.getId());
         c.setRole("ROLE_CHEF");
