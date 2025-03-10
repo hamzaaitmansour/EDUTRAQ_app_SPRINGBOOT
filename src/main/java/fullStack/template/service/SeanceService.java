@@ -200,4 +200,6 @@ public List<SeanceResponse> getAllByFiliere(Long id)
 
         return ms;
     }
+
+
 }

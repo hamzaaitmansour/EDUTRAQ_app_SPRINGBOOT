@@ -2,19 +2,26 @@ package fullStack.template.service;
 
 import fullStack.template.dto.Image;
 import fullStack.template.dto.JustificationRequest;
+import fullStack.template.dto.desktop.JustRequestD;
+import fullStack.template.dto.desktop.JustResponseD;
+import fullStack.template.entities.Filiere;
 import fullStack.template.entities.JustificationAbsence;
+import fullStack.template.entities.Matiere;
 import fullStack.template.entities.Presence;
 import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.models.Etudiant;
-import fullStack.template.repository.JustificationRepo;
-import fullStack.template.repository.PresenceRepo;
+import fullStack.template.models.Professeur;
+import fullStack.template.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class JustificationService {
@@ -25,6 +32,12 @@ public class JustificationService {
     private EtudiantService etudiantService;
     @Autowired
     private PresenceRepo presenceRepo;
+    @Autowired
+    private ProfRepo profRepo;
+    @Autowired
+    private MatiereRepo matiereRepo;
+    @Autowired
+    private FiliereRepo filiereRepo;
 
 
     public void add(JustificationRequest js) {
@@ -50,6 +63,7 @@ public class JustificationService {
                 jAbsence.setPresence(p);
                 jAbsence.setEtudiant(e);
                 jAbsence.setDescription(js.getDescription());
+                jAbsence.setDate(LocalDate.now());
 
                 justificationRepo.save(jAbsence);
 
@@ -60,4 +74,57 @@ public class JustificationService {
 
         }
 
+
+
+        public List<JustResponseD> getAllForProfFiliereMatiere(JustRequestD k)
+        {
+            System.out.println("    id matiere : "+k.getId_matiere());
+            Matiere m= matiereRepo.findById(k.getId_matiere()).orElseThrow();
+            Filiere f = filiereRepo.findById(k.getId_filiere()).orElseThrow();
+            Professeur p=profRepo.findById(k.getId_prof()).orElseThrow();
+
+
+
+            List<JustificationAbsence> list =justificationRepo.findAllByProfesseurAndMatiereAndFiliere(p,m,f);
+
+            List<JustResponseD> listResponse=new ArrayList<>();
+            for(JustificationAbsence just:list)
+            {
+                JustResponseD d=new JustResponseD();
+                d.setId(just.getId());
+                d.setFiliere(just.getPresence().getSeance().getFiliere().getNom());
+                d.setMatiere(just.getPresence().getSeance().getMatiere().getNom());
+                d.setEtudiant(just.getEtudiant().getFirstname()+" "+just.getEtudiant().getLastname());
+                d.setDescription(just.getDescription());
+                d.setDocument(just.getDocument());
+               if(just.getDate() != null)
+                d.setDate(just.getDate().toString());
+                listResponse.add(d);
+
+            }
+            return listResponse;
+        }
+
+    public List<JustResponseD> getLastJustificationFiliere(Long id ) {
+        JustificationAbsence j = justificationRepo.findLatestByProfesseur(profRepo.findById(id).orElseThrow());
+        Filiere f= j.getPresence().getSeance().getFiliere();
+        List<JustificationAbsence> list =justificationRepo.findByFiliere(f);
+
+        List<JustResponseD> listResponse=new ArrayList<>();
+        for(JustificationAbsence just:list)
+        {
+            JustResponseD d=new JustResponseD();
+            d.setId(just.getId());
+            d.setFiliere(just.getPresence().getSeance().getFiliere().getNom());
+            d.setMatiere(just.getPresence().getSeance().getMatiere().getNom());
+            d.setEtudiant(just.getEtudiant().getFirstname()+" "+just.getEtudiant().getLastname());
+            d.setDescription(just.getDescription());
+            d.setDocument(just.getDocument());
+            if(just.getDate() != null)
+            d.setDate(just.getDate().toString());
+            listResponse.add(d);
+
+        }
+        return listResponse;
+    }
 }

@@ -25,6 +25,4 @@ public class Matiere {
     @OneToMany(mappedBy = "matiere")
     private List<Seance> seances;
 
-
-
 }

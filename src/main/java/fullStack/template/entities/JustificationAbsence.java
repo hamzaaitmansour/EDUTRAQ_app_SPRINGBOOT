@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -16,15 +18,17 @@ public class JustificationAbsence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+  // doc description etudiant matiere date filiere
+     @Lob
+     private byte[] document;
 
-    @Lob
-    private byte[] document;
+     private String description;
+     private LocalDate date;
 
-    private String description;
+     @ManyToOne
+     private Etudiant etudiant;
 
-    @ManyToOne
-    private Etudiant etudiant;
+     @OneToOne
+     private Presence presence;
 
-    @OneToOne
-    private Presence presence;
 }

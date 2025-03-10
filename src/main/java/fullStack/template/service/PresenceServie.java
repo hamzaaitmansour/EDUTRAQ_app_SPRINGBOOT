@@ -3,13 +3,15 @@ package fullStack.template.service;
 import fullStack.template.dto.PresenceRequest;
 import fullStack.template.dto.PresenceResponse;
 import fullStack.template.dto.StatResponse;
+import fullStack.template.dto.desktop.PresenceDResponse;
+import fullStack.template.dto.desktop.PresenceHistRequest;
+import fullStack.template.entities.Filiere;
+import fullStack.template.entities.Matiere;
 import fullStack.template.entities.Presence;
 import fullStack.template.entities.Seance;
 import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.models.Etudiant;
-import fullStack.template.repository.EtudiantRepo;
-import fullStack.template.repository.PresenceRepo;
-import fullStack.template.repository.SeanceRepo;
+import fullStack.template.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,21 +31,34 @@ public class PresenceServie {
      @Autowired
       EtudiantRepo etudiantRepo;
 
+     @Autowired
+    FiliereRepo filiereRepo;
+     @Autowired
+    MatiereRepo matiereRepo;
+
      public Presence addP(PresenceRequest b)
      {
-         System.out.println("\n\n\n hy 1\n\n"+b.getId_etudiant());
-         Etudiant e = etudiantRepo.findById(b.getId_etudiant()).orElseThrow(()->new EntityNotFoundException("Etudiant not found"));
-         System.out.println("\n\n\n hy 1\n\n");
-         Seance seance=seanceRepo.findById(b.getId_seance()).orElseThrow(()->new EntityNotFoundException("Seance not found"));
-         LocalDate daate=LocalDate.now();
 
-         int week =daate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-         Presence presence=new Presence(null,b.getStatut(),b.getRemarque(),week,2025,seance,e,null,null,null);
+         Etudiant e = etudiantRepo.findById(b.getId_etudiant()).orElseThrow(()->new EntityNotFoundException("Etudiant not found"));
+
+         Seance seance=seanceRepo.findById(b.getId_seance()).orElseThrow(()->new EntityNotFoundException("Seance not found"));
+         LocalDate date=LocalDate.now();
+
+         int week =date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+         Presence presence=new Presence();//null,b.getStatut(),b.getRemarque(),week,2025,seance,e,null,null,null);
+          presence.setRemarque(b.getRemarque());
+          presence.setStatut(b.getStatut());
+          presence.setDate(date);
+          presence.setWeek(week);
+          presence.setYear(date.getYear());
+          presence.setSeance(seance);
+          presence.setEtudiant(e);
+
          return presenceRepo.save(presence);
      }
      public List<PresenceResponse> getPres(Etudiant etudiant,int week ,int year)
      {
-         System.out.println("\n\n\nRecherche des etusiants par week :"+week+" et etudiant "+etudiant.getEmail()+" year "+year);
+         System.out.println("\n\n\nRecherche des etudiants par week :"+week+" et etudiant "+etudiant.getEmail()+" year "+year);
          List<Presence> list=  presenceRepo.getPresencesByWeekAndEtudiantAndYear(week,etudiant,year);
          List<PresenceResponse> listResponse=new ArrayList<>();
          for (Presence p:list)
@@ -82,5 +97,36 @@ public class PresenceServie {
              addP(p);
          }
 
+    }
+
+    public List<PresenceDResponse> getHistorique(PresenceHistRequest ps) {
+        Filiere filiere=filiereRepo.findById(ps.getFiliere_id()).orElseThrow();
+        Matiere matiere=matiereRepo.findById(ps.getMatiere_id()).orElseThrow();
+        String type=ps.getType();
+       // List<Presence> presences=presenceRepo.findAllByFiliereAndMatiereAndType(filiere,matiere,ps.getType());
+        List<PresenceDResponse> res = new ArrayList<>();
+        // Les etudiants de cette filiere
+        List<Etudiant> etudiants=etudiantRepo.findEtudiantsByFiliere(filiere);
+
+        for (Etudiant e : etudiants)
+        {
+            PresenceDResponse r=new PresenceDResponse();
+
+            // Etudiant e = p.getEtudiant();
+            r.setEtudiant_id(e.getId());
+            r.setEtudiant_nom(e.getFirstname()+" "+e.getLastname());
+            r.setEtudiant_cne(e.getCne());
+            List<Presence> presences=new ArrayList<>();
+            for (Presence presence : e.getPresences())
+
+                if(presence.getSeance().getMatiere().getNom().equalsIgnoreCase(matiere.getNom()) && presence.getSeance().getType().equalsIgnoreCase(type))
+                    presences.add(presence);
+
+            r.setPresences(presences);
+
+                res.add(r);
+
+        }
+        return res;
     }
 }

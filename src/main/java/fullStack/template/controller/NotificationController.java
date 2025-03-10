@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -36,6 +37,14 @@ public class NotificationController {
 
         return new ResponseEntity<>(notificationService.addNotification(not), HttpStatus.CREATED);
     }
+
+    @GetMapping("/{id}")
+    public List<Notification> getNots(@PathVariable Long id)
+    {
+        UserApp userApp= userAppRepo.findById(id).orElseThrow(()->new RuntimeException(""));
+        return userApp.getNotifications();
+    }
+
 
 
 }

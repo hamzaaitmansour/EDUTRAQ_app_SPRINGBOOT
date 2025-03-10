@@ -1,5 +1,7 @@
 package fullStack.template.repository;
 
+import fullStack.template.entities.Filiere;
+import fullStack.template.entities.Matiere;
 import fullStack.template.entities.Presence;
 import fullStack.template.entities.Seance;
 import fullStack.template.models.Etudiant;
@@ -17,5 +19,10 @@ public interface PresenceRepo extends JpaRepository<Presence,Long> {
             "FROM presence WHERE seance_id = :seanceId", nativeQuery = true)
     Double getAbsencePercentageBySeance(@Param("seanceId") Long seanceId);
 
+
+    @Query("SELECT p FROM Presence p WHERE p.seance.filiere = :filiere AND p.seance.matiere = :matiere AND p.seance.type = :type")
+    List<Presence> findAllByFiliereAndMatiereAndType(@Param("filiere") Filiere f,
+                                                     @Param("matiere") Matiere m,
+                                                     @Param("type") String type);
 
 }

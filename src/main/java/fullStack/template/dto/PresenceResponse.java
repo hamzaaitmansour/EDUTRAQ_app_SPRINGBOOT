@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PresenceResponse {
+
     private Long id;
     private String statut;
     private String heure;

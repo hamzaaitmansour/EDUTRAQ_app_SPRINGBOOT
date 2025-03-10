@@ -19,7 +19,6 @@ public class Archive {
     private int week;
     private  int annee;
 
-    @OneToMany(mappedBy = "archive")
-    private  List<Presence> presences;
+
 
 }

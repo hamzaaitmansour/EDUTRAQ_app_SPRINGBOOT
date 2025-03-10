@@ -13,4 +13,6 @@ public interface SeanceRepo extends JpaRepository<Seance,Long> {
   public List<Seance> findSeancesByHeureAndJour(String heure, String jour);
   public List<Seance> findSeancesByFiliere(Filiere filiere);
   public List<Seance> findAllByProfesseur(Professeur professeur);
+
+
 }
