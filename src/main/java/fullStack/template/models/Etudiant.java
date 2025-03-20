@@ -19,9 +19,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Etudiant extends UserApp {
-    private String empreinte;
+    @Lob
+    private byte[] empreinte;
+
     private String cne;
     private String cni_etudiant;
+    @Lob
+    private byte[] profile;
 
     @ManyToOne
     private Filiere filiere;
@@ -36,11 +40,11 @@ public class Etudiant extends UserApp {
     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JustificationAbsence> justifications;
 
-    @ManyToMany
-    @JoinTable(
-            name = "etudiant_seance",
-            joinColumns = @JoinColumn(name = "etudiant_id"),
-            inverseJoinColumns = @JoinColumn(name = "seance_id")
-    )
-    private List<Seance> seances;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "etudiant_seance",
+//            joinColumns = @JoinColumn(name = "etudiant_id"),
+//            inverseJoinColumns = @JoinColumn(name = "seance_id")
+//    )
+////    private List<Seance> seances;
 }

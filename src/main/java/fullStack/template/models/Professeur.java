@@ -1,11 +1,8 @@
 package fullStack.template.models;
 
-import fullStack.template.entities.Matiere;
+import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Seance;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,11 +17,13 @@ import java.util.List;
 @AllArgsConstructor
 public class Professeur extends UserApp {
     private String cni_prof;
-    private int apogee;
-    @ManyToMany(mappedBy = "professeurs")
-    private List<Matiere> matieres;
+    private String apogee;
+
+
+    @OneToOne
+    @JoinColumn(name = "filiere_id", nullable = true)  // Le champ filiere_id peut être null
+    private Filiere filiere;
+
     @OneToMany(mappedBy = "professeur", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seance> seances;
-
-
 }

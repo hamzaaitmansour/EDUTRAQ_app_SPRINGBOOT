@@ -1,8 +1,8 @@
 package fullStack.template.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fullStack.template.models.ChefFiliere;
 import fullStack.template.models.Etudiant;
+import fullStack.template.models.Professeur;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,20 +17,17 @@ public class Filiere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nom;
     private int effectif;
 
     @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "chef_filiere_id") // Filiere est le propriétaire de la relation
-    private ChefFiliere chefFiliere;
-
+    @OneToOne(mappedBy = "filiere")
+    private Professeur professeur;
     @JsonIgnore
-    @OneToMany(mappedBy = "filiere")
+    @OneToMany(mappedBy = "filiere", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seance> seances;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "filiere")
+    @OneToMany(mappedBy = "filiere", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Etudiant> etudiants;
 }

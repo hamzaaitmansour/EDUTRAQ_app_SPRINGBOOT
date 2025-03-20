@@ -1,12 +1,9 @@
 package fullStack.template.controller.chefs;
 
-import fullStack.template.dto.CheckSalle;
-import fullStack.template.dto.SeanceRequest;
-import fullStack.template.dto.SeanceResponse;
-import fullStack.template.entities.Filiere;
+import fullStack.template.dto.*;
 import fullStack.template.entities.Salle;
 import fullStack.template.entities.Seance;
-import fullStack.template.models.ChefFiliere;
+import fullStack.template.service.ChefService;
 import fullStack.template.service.SalleService;
 import fullStack.template.service.SeanceService;
 import jakarta.validation.Valid;
@@ -28,15 +25,17 @@ public class ChefFiliereController {
 
      @Autowired
      private SalleService salleService;
+    @Autowired
+    private ChefService chefService;
 
 
     // ajouter seance
-      @PostMapping("/seance")
-    public ResponseEntity<Seance> addSeance(@Valid  @RequestBody SeanceRequest seance)
+      @PostMapping("/seance/{id}")
+    public ResponseEntity<Seance> addSeance(@PathVariable Long id,@RequestBody SeanceRequest seance)
       {
 
           System.out.println(seance.getJour()+"\n\n");
-          return new ResponseEntity<>(seanceService.addSeance(seance), HttpStatus.CREATED);
+          return new ResponseEntity<>(seanceService.addSeance(seance,id), HttpStatus.CREATED);
       }
     // delete seance
     @DeleteMapping("/seance/{id}")
@@ -51,11 +50,23 @@ public class ChefFiliereController {
     {
         return  new ResponseEntity<>( seanceService.updateSeance(seance),HttpStatus.ACCEPTED);
     }
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<ChefResponseProfile> getChefProfile(@PathVariable Long id)
+    {
+        return new ResponseEntity<>(chefService.getProfile(id),HttpStatus.OK);
+    }
+
+    @PutMapping("/profile/{id}")
+    public ResponseEntity<?> updateChefProfile(@RequestBody ChefResponseProfile profile ,@PathVariable Long id)
+    {    chefService.updateProfile(id,profile);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
     // get All seance of filiere
     @GetMapping("/seance/{id}")
     public ResponseEntity<List<SeanceResponse>> getAllSeanceByFiliere(@PathVariable Long id)
     {
+        System.out.println("\n\n\n "+id+"\n\n");
         return new ResponseEntity<>(seanceService.getAllByFiliere(id),HttpStatus.OK);
     }
     @PostMapping("/seance/check")

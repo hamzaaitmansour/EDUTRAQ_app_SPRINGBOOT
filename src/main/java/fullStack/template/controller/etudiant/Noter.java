@@ -1,5 +1,6 @@
 package fullStack.template.controller.etudiant;
 
+import fullStack.template.dto.FeedbackRequest;
 import fullStack.template.dto.JustificationRequest;
 import fullStack.template.entities.Feedback;
 import fullStack.template.entities.JustificationAbsence;
@@ -22,23 +23,23 @@ public class Noter {
     private FeedbackService feedbackService;
     @Autowired
     private JustificationService justificationService;
-    @PostMapping("/feedback")
-        public ResponseEntity<Feedback> addFeedback(@RequestBody Feedback feedback)
+        @PostMapping("/feedback")
+        public ResponseEntity<Feedback> addFeedback(@RequestBody FeedbackRequest f)
             {
-               return new ResponseEntity<>(feedbackService.addFeedback(feedback), HttpStatus.CREATED);
+                System.out.println("\n\n\n "+f.toString()+"\n\n");
+               return new ResponseEntity<>(feedbackService.addFeedback(f), HttpStatus.CREATED);
             }
 
 
 
         @PostMapping("/justification")
         public ResponseEntity<?> addJust(@RequestBody JustificationRequest jr)
-                throws IOException {
-                byte[] fileContent =jr.getFile().getBytes();
-                String fileName = jr.getFile().getOriginalFilename();
-                String contentType = jr.getFile().getContentType();
-                justificationService.add(fileContent,fileName,contentType,jr.getDescription(),jr.getEtudiant_id(),jr.getPresence_id());
+        {
+            System.out.println("\n\n\n Post a Justification "+"  \n"+jr.getPresence_id());
+            System.out.println("\n\n"+jr.toString()+"\n\n");
 
-              return ResponseEntity.status(HttpStatus.CREATED)
+                justificationService.add(jr);
+                return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Justification enregistrée avec succès");
         }
 }

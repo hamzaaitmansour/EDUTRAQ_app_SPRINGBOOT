@@ -3,6 +3,7 @@ package fullStack.template.controller.etudiant;
 import fullStack.template.dto.PresenceHistoireRequest;
 import fullStack.template.dto.PresenceResponse;
 import fullStack.template.dto.SeanceResponse;
+import fullStack.template.dto.StatResponse;
 import fullStack.template.entities.Notification;
 import fullStack.template.entities.Presence;
 import fullStack.template.entities.Seance;
@@ -35,11 +36,8 @@ public class DashboardController {
     @GetMapping("/emploit/{id}")
     public ResponseEntity<List<SeanceResponse>> getEmploit(@PathVariable Long id)
     {
-        System.out.println("\n\n\n\n\n"+id+"\n\n\n\n\n\n");
-        Etudiant e=etudiantService.getEtudiantById(id);
-        System.out.println("\n test test \n\n");
-        List<SeanceResponse> list =seanceService.getAllByFiliere(e.getFiliere().getId());
-        System.out.println("\n test 2   test 2\n\n");
+        List<SeanceResponse> list =seanceService.getAllByFiliereForStudent(id);
+
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     @GetMapping("/emails/vu/{id}")
@@ -65,12 +63,12 @@ public class DashboardController {
         }
 
     // dashboard reçois tous les presences de cette semaine
-    @GetMapping("/dashboard/presence/{email}")
-    public ResponseEntity<List<PresenceResponse>>  getDashboardPresence(@PathVariable String email)
+    @GetMapping("/dashboard/presence/{id}")
+    public ResponseEntity<List<PresenceResponse>>  getDashboardPresence(@PathVariable Long id)
     {
         LocalDate date = LocalDate.now();
 
-        Etudiant etudiant=etudiantService.getByEmail(email);
+        Etudiant etudiant=etudiantService.getEtudiantById(id);
         System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere().getNom());
 
       return
@@ -83,16 +81,25 @@ public class DashboardController {
      public ResponseEntity<List<PresenceResponse>> getHistoirePresence(@RequestBody PresenceHistoireRequest p)
     {
         LocalDate date = p.getDate();
-
-        Etudiant etudiant=etudiantService.getByEmail(p.getEmail());
+        System.out.println("\n\n\n  "+date+" \n\n\n");
+        Etudiant etudiant=etudiantService.getEtudiantById(p.getId());
         System.out.println(etudiant.getFirstname()+etudiant.getLastname()+etudiant.getFiliere().getNom());
-
         return
-                new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
+          new ResponseEntity<>(presenceServie.getPres(etudiant,date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR),date.getYear()),HttpStatus.OK);
 
     }
 
+    @GetMapping("/stat/{id}")
+    public List<StatResponse> getStat(@PathVariable Long id)
+    {
+        return presenceServie.getStat(id);
+    }
 
-    //
+    @GetMapping("/seance/next/{id}")
+    public ResponseEntity<SeanceResponse> getNextSeance(@PathVariable Long id)
+    {
+        return new ResponseEntity<>(seanceService.getNextresponseSeance(id),HttpStatus.OK);
+    }
+
 
 }

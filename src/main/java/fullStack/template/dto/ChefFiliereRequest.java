@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChefFiliereRequest {
+
     private Long id_prof;
     private Long id_filiere;
 }

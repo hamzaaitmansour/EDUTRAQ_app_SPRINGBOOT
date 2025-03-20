@@ -10,6 +10,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PresenceHistoireRequest {
-    private String email;
+    private Long id;
     private LocalDate date;
 }

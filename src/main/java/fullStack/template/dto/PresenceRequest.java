@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PresenceRequest {
+
     private Long id_seance;
     private Long id_etudiant;
     private String statut;

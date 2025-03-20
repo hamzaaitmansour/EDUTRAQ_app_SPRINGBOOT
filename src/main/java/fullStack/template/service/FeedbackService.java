@@ -1,6 +1,8 @@
 package fullStack.template.service;
 
+import fullStack.template.dto.FeedbackRequest;
 import fullStack.template.entities.Feedback;
+import fullStack.template.entities.Presence;
 import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.repository.FeedbackRepo;
 import fullStack.template.repository.PresenceRepo;
@@ -16,9 +18,13 @@ public class FeedbackService {
     @Autowired
     private PresenceRepo presenceRepo;
 
-    public Feedback addFeedback(Feedback f)
+    public Feedback addFeedback(FeedbackRequest f)
     {
-        return feedbackRepo.save(f);
+        Presence p = presenceRepo.findById(f.getPresence_id()).orElseThrow(()->new EntityNotFoundException("Not found "));
+        Feedback feedback=new Feedback();
+        feedback.setPresence(p);
+        feedback.setCommentaire(f.getMessage());
+        return feedbackRepo.save(feedback);
     }
     public List<Feedback> getAllFeedbacks(Long id_presence)
     {

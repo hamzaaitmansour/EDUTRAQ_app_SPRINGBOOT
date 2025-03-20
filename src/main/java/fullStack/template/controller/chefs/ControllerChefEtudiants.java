@@ -1,5 +1,7 @@
 package fullStack.template.controller.chefs;
 
+import fullStack.template.dto.Image;
+import fullStack.template.dto.UpdateEtudiant;
 import fullStack.template.models.Etudiant;
 import fullStack.template.service.EtudiantService;
 import jakarta.validation.Valid;
@@ -8,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -15,13 +18,46 @@ import java.util.List;
 public class ControllerChefEtudiants {
 @Autowired
     private EtudiantService etudiantService;
-@PostMapping()
-    public ResponseEntity<Etudiant> add(@Valid @RequestBody Etudiant etudiant)
+    @PostMapping("/{id}")
+    public ResponseEntity<String> add(@PathVariable Long id, @RequestBody Image etudiant)
     {
         System.out.println("\n\n hey hey \n\n");
-     return new ResponseEntity<>(etudiantService.addEtudiant(etudiant), HttpStatus.CREATED);
+        System.out.println(etudiant.toString());
+     return new ResponseEntity<>(etudiantService.addEtudiant(etudiant,id), HttpStatus.CREATED);
+    }
+   @DeleteMapping("/{id}")
+   public ResponseEntity<?> delete(@PathVariable Long id)
+   {
+       etudiantService.deleteEtudiant(id);
+       return ResponseEntity.noContent().build();
+   }
+    @GetMapping("/etudiant/{id}")
+    public ResponseEntity<Image> getEtudiant(@PathVariable Long id) {
+        // Récupérer l'entité ImageEntity à partir de l'ID
+        Etudiant imageEntity = etudiantService.getEtudiantById(id);
+
+        if (imageEntity == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+
+        Image response= new Image();
+
+        response.setEmail(imageEntity.getEmail());
+
+        response.setPassword(imageEntity.getPassword());
+
+        response.setProfile("data:image/jpeg;base64," + Base64.getEncoder().encodeToString(imageEntity.getProfile()));
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateEtudiant(@RequestBody UpdateEtudiant etudiant,@PathVariable Long id)
+    {
+         etudiantService.updateEtudiantFromChef(etudiant,id);
+         return ResponseEntity.accepted().build();
+    }
     @GetMapping()
     public ResponseEntity<List<Etudiant>> getAll()
     {
@@ -29,8 +65,9 @@ public class ControllerChefEtudiants {
     }
 
     @GetMapping("/filiere/{id}")
-    public ResponseEntity<List<Etudiant>> getAllByFiliere(@PathVariable Long id)
+    public ResponseEntity<List<Image>> getAllByFiliere(@PathVariable Long id)
     {
+        System.out.println("Requete pour get etudiants ");
         return new ResponseEntity<>(etudiantService.getAllEtudiantsByFiliere(id),HttpStatus.OK);
     }
     @PutMapping()

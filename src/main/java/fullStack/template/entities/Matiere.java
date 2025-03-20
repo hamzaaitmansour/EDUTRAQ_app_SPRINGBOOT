@@ -7,12 +7,15 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Matiere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,13 +27,5 @@ public class Matiere {
     @JsonIgnore
     @OneToMany(mappedBy = "matiere")
     private List<Seance> seances;
-
-    @ManyToMany
-    @JoinTable(
-            name = "matiere_professeur",
-            joinColumns = @JoinColumn(name = "matiere_id"),
-            inverseJoinColumns = @JoinColumn(name = "professeur_id")
-    )
-    private List<Professeur> professeurs;
 
 }

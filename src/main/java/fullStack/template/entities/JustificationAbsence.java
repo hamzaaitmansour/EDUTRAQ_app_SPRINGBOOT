@@ -2,10 +2,13 @@ package fullStack.template.entities;
 
 import fullStack.template.models.Etudiant;
 import fullStack.template.models.UserApp;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -15,19 +18,17 @@ public class JustificationAbsence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+  // doc description etudiant matiere date filiere
+     @Lob
+     private byte[] document;
 
-    @Lob
-    private byte[] document;
-    // Stocke le nom du fichier (optionnel)
-    private String fileName;
+     private String description;
+     private LocalDate date;
 
-    // Stocke le type MIME de l'image (ex: image/jpeg, image/png)
-    private String contentType;
-    private String description;
+     @ManyToOne
+     private Etudiant etudiant;
 
-    @ManyToOne
-    private Etudiant etudiant;
+     @OneToOne
+     private Presence presence;
 
-    @OneToOne
-    private Presence presence;
 }

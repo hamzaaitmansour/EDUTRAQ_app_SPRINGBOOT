@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SeanceRequest {
 
-    private String heure;
+    private Long id_matiere;
+    private Long id_user;
+    private Long id_salle;
     private String jour;
+    private String heure;
+
     private String type;
-    private Long filiere_id;
-    private String matiere_nom;
-    private Long prof_id;
-    private String salle_nom;
+
 }

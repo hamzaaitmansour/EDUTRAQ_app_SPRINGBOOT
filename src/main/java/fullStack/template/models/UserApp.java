@@ -27,20 +27,22 @@ public class UserApp {
 
     private String firstname;
     private String lastname;
+    private boolean account_complete;
 
-    @NotBlank(message = "Le champ email est vide")
-    @Email
-    @Column(unique = true)
+  //  @NotBlank(message = "Le champ email est vide")
+    //@Email
+   // @Column(unique = true)
     private String email;
 
-    @NotBlank(message = "Le champ password est vide")
+  //  @NotBlank(message = "Le champ password est vide")
+
     private String password;
 
-    @Pattern(regexp = "^(?:\\+212|0)(5|6|7)\\d{8}$", message = "ce numero de telephone est invalid")
+   // @Pattern(regexp = "^(?:\\+212|0)(5|6|7)\\d{8}$", message = "ce numero de telephone est invalid")
     private String telephone;
 
-    @Size(min = 4, message = "le champ Role est inferieur a 4 caracteres")
-    private String role; // "COORDINATEUR", "PROFESSEUR", "ETUDIANT", "CHEF"
+   // @Size(min = 4, message = "le champ Role est inferieur a 4 caracteres")
+    private String role;// "COORDINATEUR", "PROFESSEUR", "ETUDIANT", "CHEF"
 
     @JsonIgnore
     @OneToMany(mappedBy = "userApp", cascade = CascadeType.ALL, orphanRemoval = true)
