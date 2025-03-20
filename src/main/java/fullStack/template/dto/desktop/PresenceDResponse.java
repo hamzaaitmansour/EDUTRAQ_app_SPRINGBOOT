@@ -15,8 +15,8 @@ public class PresenceDResponse {
 
     private Long etudiant_id;
     private String etudiant_nom;
-
     private String etudiant_cne;
     private List<Presence> presences;
+
 
 }

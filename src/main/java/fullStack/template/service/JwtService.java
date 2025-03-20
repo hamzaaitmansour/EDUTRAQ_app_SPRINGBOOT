@@ -40,13 +40,14 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         UserApp user = userAppRepo.findByEmail(userDetails.getUsername());
         claims.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
+        claims.put("verify",user.isAccount_complete());
         claims.put("id",user.getId());
         claims.put("nom",user.getFirstname()+" "+user.getLastname());
         return Jwts.builder()
-                .setClaims(claims) // Add claims to the token
-                .setSubject(userDetails.getUsername()) // Set the subject (e.g., username)
-                .setIssuedAt(new Date(System.currentTimeMillis())) // Set issue date
-                .setExpiration(new Date(System.currentTimeMillis() + (2 * 60 * 60 * 1000))) // Set expiration date
+                .claims(claims) // Add claims to the token
+                .subject(userDetails.getUsername()) // Set the subject (e.g., username)
+                .issuedAt(new Date(System.currentTimeMillis())) // Set issue date
+                .expiration(new Date(System.currentTimeMillis() + (2 * 60 * 60 * 1000))) // Set expiration date
                 .signWith(getKey()) // Sign the token with the secret key
                 .compact(); // Build the token
     }

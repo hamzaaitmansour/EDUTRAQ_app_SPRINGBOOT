@@ -49,7 +49,7 @@ public class ProfJustificationController {
     @GetMapping("/matiere/{id}")
     public ResponseEntity<List<Matiere>> getMatieres(@PathVariable  Long id)
     {
-        Professeur prof=profRepo.findById(id).orElseThrow();
+        Professeur prof = profRepo.findById(id).orElseThrow();
         return new ResponseEntity<>(matiereService.getMatiereByProf(prof),HttpStatus.OK);
     }
     @GetMapping("/filiere/{id}")

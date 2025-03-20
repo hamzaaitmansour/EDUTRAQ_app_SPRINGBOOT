@@ -107,6 +107,8 @@ public class JustificationService {
 
     public List<JustResponseD> getLastJustificationFiliere(Long id ) {
         JustificationAbsence j = justificationRepo.findLatestByProfesseur(profRepo.findById(id).orElseThrow());
+        if(j == null)
+            return new ArrayList<JustResponseD>();
         Filiere f= j.getPresence().getSeance().getFiliere();
         List<JustificationAbsence> list =justificationRepo.findByFiliere(f);
 

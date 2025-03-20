@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PresenceHistoireRequest {
-
     private Long id;
     private LocalDate date;
 }

@@ -36,11 +36,8 @@ public class DashboardController {
     @GetMapping("/emploit/{id}")
     public ResponseEntity<List<SeanceResponse>> getEmploit(@PathVariable Long id)
     {
-        System.out.println("\n\n\n\n\n"+id+"\n\n\n\n\n\n");
-        Etudiant e=etudiantService.getEtudiantById(id);
-        System.out.println("\n test test \n\n");
-        List<SeanceResponse> list =seanceService.getAllByFiliere(e.getFiliere().getId());
-        System.out.println("\n test 2   test 2\n\n");
+        List<SeanceResponse> list =seanceService.getAllByFiliereForStudent(id);
+
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     @GetMapping("/emails/vu/{id}")

@@ -1,5 +1,6 @@
 package fullStack.template.service;
 
+import fullStack.template.dto.FiliereSimple;
 import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Matiere;
 import fullStack.template.entities.Seance;
@@ -59,5 +60,19 @@ private SeanceRepo seanceRepo;
                 fls.add(s.getFiliere());
         }
         return fls;
+    }
+
+    public List<FiliereSimple> getSimples() {
+
+        List<Filiere> fls=filiereRepo.findAll();
+        List<FiliereSimple> ls=new ArrayList<>();
+        for (Filiere f : fls)
+        {
+            FiliereSimple fs=new FiliereSimple();
+            fs.setNom(f.getNom());
+            fs.setId(f.getId());
+            ls.add(fs);
+        }
+        return  ls;
     }
 }

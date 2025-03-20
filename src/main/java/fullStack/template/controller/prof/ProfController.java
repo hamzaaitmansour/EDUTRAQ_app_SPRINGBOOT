@@ -33,12 +33,7 @@ public class ProfController {
 //        return new ResponseEntity<>(presenceServie.addP(presenceRequest), HttpStatus.CREATED);
 //    }
 
-    @GetMapping("/presence/{empreinte}")
-    public ResponseEntity<Boolean> GetEtudiant(@PathVariable String empreinte) {
-        if (etudiantService.getByEmpreinte(empreinte) != null)
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        return new ResponseEntity<>(false, HttpStatus.OK);
-    }
+
 
     @GetMapping("/emploi/{id}")
     public ResponseEntity<List<SeanceResponse>> findAllSeancesByProf(@PathVariable  Long id)
@@ -63,7 +58,6 @@ public class ProfController {
         return  ResponseEntity.ok().build();
     }
 
-
-
+    // 0059
 
 }

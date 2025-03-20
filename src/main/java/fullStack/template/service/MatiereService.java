@@ -47,12 +47,15 @@ public class MatiereService {
 
     public List<Matiere> getMatiereByProf(Professeur prof) {
         List<Seance> seances= seanceRepo.findAllByProfesseur(prof);
+
         List<Matiere> matieres=new ArrayList<>();
+
         for (Seance s : seances)
         {
             if(!matieres.contains(s.getMatiere()))
                 matieres.add(s.getMatiere());
         }
+
       return matieres;
     }
 }

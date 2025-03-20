@@ -7,12 +7,15 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.util.List;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Matiere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

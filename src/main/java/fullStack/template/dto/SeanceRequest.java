@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SeanceRequest {
-    private Long id_filiere;
+
     private Long id_matiere;
     private Long id_user;
     private Long id_salle;

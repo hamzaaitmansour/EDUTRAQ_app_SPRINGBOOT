@@ -16,8 +16,8 @@ import java.time.LocalDate;
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    private Long id;
     private String message;
     private boolean vu;
     private String type;
@@ -26,6 +26,7 @@ public class Notification {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_app_id", referencedColumnName = "id", nullable = false)
+
     private UserApp userApp;
 
 }

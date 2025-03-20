@@ -27,6 +27,7 @@ public class UserApp {
 
     private String firstname;
     private String lastname;
+    private boolean account_complete;
 
   //  @NotBlank(message = "Le champ email est vide")
     //@Email
@@ -34,6 +35,7 @@ public class UserApp {
     private String email;
 
   //  @NotBlank(message = "Le champ password est vide")
+
     private String password;
 
    // @Pattern(regexp = "^(?:\\+212|0)(5|6|7)\\d{8}$", message = "ce numero de telephone est invalid")

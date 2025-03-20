@@ -1,9 +1,12 @@
 package fullStack.template.service;
 
+import fullStack.template.dto.CordinateurResponseProfile;
+import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.models.UserApp;
 import fullStack.template.models.UserPrincipal;
 import fullStack.template.repository.UserAppRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,4 +55,27 @@ public class UserAppService implements UserDetailsService {
         return "Fail"; // Mauvais mot de passe
     }
 
+
+    public CordinateurResponseProfile getProfile(Long id) {
+        CordinateurResponseProfile profile=new CordinateurResponseProfile();
+
+        UserApp userApp=userRepo.findById(id).orElseThrow(()->new EntityNotFoundException("User Not Found"));
+        profile.setFirstname(userApp.getFirstname());
+        profile.setLastname(userApp.getLastname());
+        profile.setEmail(userApp.getEmail());
+        profile.setTelephone(userApp.getTelephone());
+        return  profile;
+
+    }
+
+    public void updateProfile(Long id, CordinateurResponseProfile profile) {
+        UserApp userApp=userRepo.findById(id).orElseThrow(()->new EntityNotFoundException("User Not Found"));
+        userApp.setFirstname(profile.getFirstname());
+        userApp.setLastname(profile.getLastname());
+        if(profile.getPassword() != null)
+           userApp.setPassword(encoder.encode(profile.getPassword()));
+        System.out.println("\n\n\n Telephone est "+userApp.getTelephone());
+        userApp.setTelephone(profile.getTelephone());
+        userRepo.save(userApp);
+    }
 }

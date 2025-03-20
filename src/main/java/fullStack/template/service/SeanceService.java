@@ -34,14 +34,15 @@ public class SeanceService {
     @Autowired
     private  EtudiantRepo etudiantRepo;
 
-public Seance addSeance(SeanceRequest s)
+public Seance addSeance(SeanceRequest s,Long id)
 {   Seance seance=new Seance();
     try{
+        Professeur prof= profRepo.findById(id).orElseThrow();
         System.out.println("\n \n \n \n seance service working ... \n \n \n \n ");
        seance.setHeure(s.getHeure());
        seance.setJour(s.getJour());
        seance.setMatiere(matiereRepo.findById(s.getId_matiere()).get());
-       seance.setFiliere(filiererepo.findById(s.getId_filiere()).get());
+       seance.setFiliere(prof.getFiliere());
        seance.setType(s.getType());
        seance.setProfesseur(profRepo.findById(s.getId_user()).get());
        seance.setSalle(salleRepo.findById(s.getId_salle()).get());
@@ -63,8 +64,13 @@ public void deleteSeance(Long id)
 public List<SeanceResponse> getAllByFiliere(Long id)
 {
     System.out.println("\n\n\n\n get all by filieres \n\n\n\n\n");
-    Filiere filiere= filiererepo.findById(id).orElseThrow(()-> new EntityNotFoundException("not found"));
-    List<Seance> s=  filiere.getSeances();
+
+    Professeur prof=profRepo.findById(id).orElseThrow();
+    Filiere filiere=prof.getFiliere();
+    System.out.println("bb");
+   // Filiere filiere=prof.getFiliere();
+    System.out.println("cc");    List<Seance> s=  filiere.getSeances();
+    System.out.println("\n\n"+s.size()+" Size \n");
     List<SeanceResponse> sr=new ArrayList<>();
     for(Seance e : s)
     {
@@ -102,8 +108,6 @@ public List<SeanceResponse> getAllByFiliere(Long id)
        return new SeanceResponse(e.getId(),e.getHeure(),e.getJour(),e.getType(),e.getMatiere().getNom(),e.getProfesseur().getFirstname()+e.getProfesseur().getLastname(),e.getSalle().getNom());
 
    }
-
-
     private Seance getNextSeance(Long id) {
         Etudiant e = etudiantRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Not found"));
@@ -142,15 +146,6 @@ public List<SeanceResponse> getAllByFiliere(Long id)
 
         // 3️⃣  Sinon, trouver la prochaine séance dans les jours à venir
     }
-
-    /**
-     * Vérifie si l’horaire de la séance est strictement après l’horaire actuel.
-     *
-     * @param heure        Chaîne de type "08:30-10:30"
-     * @param currentHour  Heure courante (ex : 9)
-     * @param currentMinute Minute courante (ex : 15)
-     * @return true si l’horaire de début est après l’heure actuelle, false sinon
-     */
     private boolean isFutureHour(String heure, int currentHour, int currentMinute) {
         // On récupère uniquement l’heure de début
         String[] timeRange = heure.split("-");
@@ -202,4 +197,17 @@ public List<SeanceResponse> getAllByFiliere(Long id)
     }
 
 
+    public List<SeanceResponse> getAllByFiliereForStudent(Long id) {
+        Etudiant et=etudiantRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Not found"));
+        List<Seance> seances = seanceRepo.findSeancesByFiliere(et.getFiliere());
+
+
+        List<SeanceResponse> sr=new ArrayList<>();
+        for(Seance e : seances)
+        {
+            SeanceResponse r=new SeanceResponse(e.getId(),e.getHeure(),e.getJour(),e.getType(),e.getMatiere().getNom(),e.getProfesseur().getFirstname()+e.getProfesseur().getLastname(),e.getSalle().getNom());
+            sr.add(r);
+        }
+        return sr;
+    }
 }

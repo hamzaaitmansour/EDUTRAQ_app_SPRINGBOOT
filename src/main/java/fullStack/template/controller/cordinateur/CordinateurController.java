@@ -1,11 +1,9 @@
 package fullStack.template.controller.cordinateur;
 
-import fullStack.template.dto.ChefFiliereRequest;
-import fullStack.template.dto.ProfRequestCordinateur;
+import fullStack.template.dto.*;
 import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Matiere;
 import fullStack.template.entities.Salle;
-import fullStack.template.models.ChefFiliere;
 import fullStack.template.models.Professeur;
 import fullStack.template.service.*;
 import jakarta.validation.Valid;
@@ -35,10 +33,13 @@ public class CordinateurController {
 
     @Autowired
     private ChefService chefService;
+     @Autowired
+     private UserAppService userAppService;
 
-    // FILIERE
+     // FILIERE
     @PostMapping("/filiere")
     public ResponseEntity<Filiere> addFiliere(@RequestBody Filiere filiere) {
+
         return new ResponseEntity<>(filiereService.addFiliere(filiere), HttpStatus.CREATED);
     }
      @PutMapping("/filiere")
@@ -115,6 +116,7 @@ public class CordinateurController {
         Professeur f=new Professeur();
         f.setEmail(professeur.getEmail());
         f.setApogee(professeur.getApogee());
+        f.setAccount_complete(false);
          return new ResponseEntity<>(profService.register(f), HttpStatus.CREATED);
      }
      @PutMapping("/prof")
@@ -124,6 +126,7 @@ public class CordinateurController {
 
      @DeleteMapping("/prof/{id}")
      public ResponseEntity<?> deleteProf(@PathVariable Long id) {
+
          profService.deleteProf(id);
 
          return ResponseEntity.noContent().build();
@@ -140,27 +143,42 @@ public class CordinateurController {
 
      // CHEF
      @PostMapping("/chef")
-     public ResponseEntity<ChefFiliere> addChef(@RequestBody ChefFiliereRequest chef) {
+     public ResponseEntity<Professeur> addChef(@RequestBody ChefFiliereRequest chef) {
          return new ResponseEntity<>(chefService.addChef(chef), HttpStatus.CREATED);
      }
-     @PutMapping("/chef")
-     public ResponseEntity<ChefFiliere> updateChef(@RequestBody ChefFiliere chef) {
-         return new ResponseEntity<>(chefService.update(chef), HttpStatus.ACCEPTED);
-     }
 
-     @DeleteMapping("/chef/{id}")
-     public ResponseEntity<?> deleteChef(@PathVariable Long id) {
-         chefService.delete(id);
-         return ResponseEntity.noContent().build();
+     @GetMapping("/prof/chef")
+     public ResponseEntity<List<ProfSimple>> findProfChefAll() {
+        return new ResponseEntity<>(profService.getSimpleProfs(),HttpStatus.OK);
      }
-
-     @GetMapping("/chef/{email}")
-     public ResponseEntity<ChefFiliere> findChef(@PathVariable String email) {
-         return new ResponseEntity<>(chefService.findByEmail(email), HttpStatus.OK);
+     @GetMapping("/filiere/chef")
+     public ResponseEntity<List<FiliereSimple>> findProfFiliereChefAll() {
+        return  new ResponseEntity<>(filiereService.getSimples(),HttpStatus.OK);
      }
-     
      @GetMapping("/chef")
-     public ResponseEntity<List<ChefFiliere>> findChefsAll() {
-         return new ResponseEntity<>(chefService.getAll(), HttpStatus.OK);
+     public ResponseEntity<List<ChefResponse>> getAllChefs()
+     {
+         System.out.println(" Get ALL ");
+         return new ResponseEntity<>(profService.getAllChefs(),HttpStatus.OK);
      }
+     @DeleteMapping("/chef/{id}")
+     public  void delete(@PathVariable Long id)
+     {
+         profService.deleteChef(id);
+     }
+
+     @GetMapping("/profile/{id}")
+     public ResponseEntity<CordinateurResponseProfile> getProfile(@PathVariable Long id)
+     {
+         return new ResponseEntity<>(userAppService.getProfile(id),HttpStatus.OK);
+     }
+     @PutMapping("/profile/{id}")
+     public ResponseEntity<?> updateProfile(@PathVariable Long id, @RequestBody CordinateurResponseProfile profile) {
+         System.out.println("\n \n \nMethode Post Fonctionne ");
+        userAppService.updateProfile(id,profile);
+
+        return ResponseEntity.accepted().build();
+
+     }
+
 }

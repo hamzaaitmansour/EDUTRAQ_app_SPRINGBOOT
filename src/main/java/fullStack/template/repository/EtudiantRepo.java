@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface EtudiantRepo extends JpaRepository<Etudiant,Long> {
     public Etudiant findByEmail(String email);
-    public Etudiant findByEmpreinte(String empreinte);
+   // public Etudiant findByEmpreinte(String empreinte);
     public List<Etudiant> findEtudiantsByFiliere(Filiere filiere);
 
 

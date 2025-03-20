@@ -1,6 +1,7 @@
 package fullStack.template.controller.chefs;
 
 import fullStack.template.dto.Image;
+import fullStack.template.dto.UpdateEtudiant;
 import fullStack.template.models.Etudiant;
 import fullStack.template.service.EtudiantService;
 import jakarta.validation.Valid;
@@ -17,14 +18,19 @@ import java.util.List;
 public class ControllerChefEtudiants {
 @Autowired
     private EtudiantService etudiantService;
-@PostMapping()
-    public ResponseEntity<String> add( @RequestBody Image etudiant)
+    @PostMapping("/{id}")
+    public ResponseEntity<String> add(@PathVariable Long id, @RequestBody Image etudiant)
     {
         System.out.println("\n\n hey hey \n\n");
         System.out.println(etudiant.toString());
-     return new ResponseEntity<>(etudiantService.addEtudiant(etudiant), HttpStatus.CREATED);
+     return new ResponseEntity<>(etudiantService.addEtudiant(etudiant,id), HttpStatus.CREATED);
     }
-
+   @DeleteMapping("/{id}")
+   public ResponseEntity<?> delete(@PathVariable Long id)
+   {
+       etudiantService.deleteEtudiant(id);
+       return ResponseEntity.noContent().build();
+   }
     @GetMapping("/etudiant/{id}")
     public ResponseEntity<Image> getEtudiant(@PathVariable Long id) {
         // Récupérer l'entité ImageEntity à partir de l'ID
@@ -46,6 +52,12 @@ public class ControllerChefEtudiants {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateEtudiant(@RequestBody UpdateEtudiant etudiant,@PathVariable Long id)
+    {
+         etudiantService.updateEtudiantFromChef(etudiant,id);
+         return ResponseEntity.accepted().build();
+    }
     @GetMapping()
     public ResponseEntity<List<Etudiant>> getAll()
     {

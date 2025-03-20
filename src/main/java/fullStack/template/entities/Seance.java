@@ -40,8 +40,8 @@ public class Seance {
     @OneToMany(mappedBy = "seance")
     private List<Presence> presences;
 
-    @ManyToMany(mappedBy = "seances")
-    private List<Etudiant> etudiants;
+//    @ManyToMany(mappedBy = "seances")
+//    private List<Etudiant> etudiants;
 
     @ManyToOne
     private Salle salle;

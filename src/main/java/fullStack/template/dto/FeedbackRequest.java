@@ -10,6 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class FeedbackRequest {
+
     private Long presence_id;
     private String message;
 }

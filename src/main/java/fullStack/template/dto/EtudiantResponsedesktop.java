@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 public class EtudiantResponsedesktop {
     private String cne;
     private byte[] profile;
+    private byte[] empreinte;
     private String cni;
     private String nom;
     private String prenom;
     private Long id;
-
 }

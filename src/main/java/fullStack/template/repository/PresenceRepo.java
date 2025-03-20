@@ -16,8 +16,11 @@ import java.util.List;
 public interface PresenceRepo extends JpaRepository<Presence,Long> {
     public List<Presence> getPresencesByWeekAndEtudiantAndYear(int week, Etudiant etudiant,int year);
     @Query(value = "SELECT (COUNT(CASE WHEN statut = 'absent' THEN 1 END) * 100.0 / COUNT(*)) " +
-            "FROM presence WHERE seance_id = :seanceId", nativeQuery = true)
-    Double getAbsencePercentageBySeance(@Param("seanceId") Long seanceId);
+            "FROM presence WHERE seance_id = :seanceId AND etudiant_id = :etudiantId",
+            nativeQuery = true)
+    Double getAbsencePercentageBySeance(@Param("seanceId") Long seanceId,
+                                        @Param("etudiantId") Long etudiantId);
+
 
 
     @Query("SELECT p FROM Presence p WHERE p.seance.filiere = :filiere AND p.seance.matiere = :matiere AND p.seance.type = :type")

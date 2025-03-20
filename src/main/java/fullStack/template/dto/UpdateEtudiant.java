@@ -3,14 +3,14 @@ package fullStack.template.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class StatResponse {
-
-    private String matiere;
-    private int stat;
+public class UpdateEtudiant {
+    private String lastname;
+    private String firstname;
+    private String cne;
+    private String cni;
+    private String telephone;
 }
