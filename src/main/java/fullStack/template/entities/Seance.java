@@ -42,10 +42,10 @@ public class Seance {
 
 //    @ManyToMany(mappedBy = "seances")
 //    private List<Etudiant> etudiants;
-
+    @JsonIgnore
     @ManyToOne
     private Salle salle;
-
+   @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "professeur_id") // Nom de la colonne dans la table Seance
     private Professeur professeur;

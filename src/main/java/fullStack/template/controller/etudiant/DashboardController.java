@@ -13,10 +13,12 @@ import fullStack.template.service.NotificationService;
 import fullStack.template.service.PresenceServie;
 import fullStack.template.service.SeanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.IsoFields;
 import java.util.List;
@@ -101,5 +103,29 @@ public class DashboardController {
         return new ResponseEntity<>(seanceService.getNextresponseSeance(id),HttpStatus.OK);
     }
 
+
+
+    @GetMapping("/export/{format}")
+    public ResponseEntity<byte[]> exportStudents(@PathVariable String format) throws IOException {
+        byte[] data;
+
+        // Vérifier le format et appeler le service approprié
+        switch (format.toLowerCase()) {
+            case "pdf":
+                data = etudiantService.exportStudentsAsPDF();
+                break;
+            // case "excel":
+             //   data = etudiantService.exportStudentsAsExcel();
+             //   break;
+            default:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Format non supporté".getBytes());
+        }
+
+        // Définir les en-têtes de réponse pour le téléchargement
+        String contentDisposition = "attachment; filename=students-list." + format;
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(data);}
 
 }

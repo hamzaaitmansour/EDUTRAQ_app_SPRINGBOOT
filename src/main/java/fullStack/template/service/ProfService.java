@@ -6,6 +6,7 @@ import fullStack.template.dto.ProfSimple;
 import fullStack.template.dto.desktop.ProfileChef;
 import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Seance;
+import fullStack.template.exception.EntityAlreadyExistException;
 import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.models.Professeur;
 import fullStack.template.models.UserApp;
@@ -31,10 +32,20 @@ public class ProfService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Professeur register(Professeur user) {
-        user.setRole("PROF");
-        user.setPassword(encoder.encode(user.getApogee())); // Hachage du mot de passe
-        return profRepo.save(user);
+    public Professeur register(ProfRequestCordinateur user) {
+
+        Professeur prof=profRepo.findProfesseurByEmail(user.getEmail());
+
+        if(prof!=null)
+            throw new EntityAlreadyExistException("professeur already exist");
+
+        Professeur f=new Professeur();
+        f.setEmail(user.getEmail());
+        f.setApogee(user.getApogee());
+        f.setAccount_complete(false);
+        f.setRole("PROF");
+        f.setPassword(encoder.encode(user.getApogee())); // Hachage du mot de passe
+        return profRepo.save(f);
 
     }
     public Professeur update(ProfRequestCordinateur user) {
@@ -78,10 +89,13 @@ public class ProfService {
         List<Professeur> p= profRepo.findAll();
         List<ProfSimple> pf=new ArrayList<>();
         for (Professeur prof : p) {
-            ProfSimple ps=new ProfSimple();
-            ps.setId(prof.getId());
-            ps.setNom(prof.getLastname()+" "+prof.getFirstname());
-            pf.add(ps);
+            if (prof.getRole().equals("PROF")) {
+                ProfSimple ps=new ProfSimple();
+                ps.setId(prof.getId());
+                ps.setNom(prof.getEmail());
+                pf.add(ps);
+            }
+
         }
         return pf;
     }

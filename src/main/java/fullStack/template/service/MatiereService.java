@@ -3,6 +3,7 @@ package fullStack.template.service;
 import fullStack.template.entities.Filiere;
 import fullStack.template.entities.Matiere;
 import fullStack.template.entities.Seance;
+import fullStack.template.exception.EntityAlreadyExistException;
 import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.models.Professeur;
 import fullStack.template.repository.MatiereRepo;
@@ -25,6 +26,9 @@ public class MatiereService {
     private SeanceRepo seanceRepo;
     public Matiere addMatiere(Matiere matiere)
     {
+         Matiere n = matiereRepo.findMatiereByNom(matiere.getNom());
+         if(n != null)
+            throw  new EntityAlreadyExistException("La Matiere est deja existe");
         return matiereRepo.save(matiere);
     }
     public void deleteMatiere(Long id) throws Exception {
@@ -34,6 +38,8 @@ public class MatiereService {
     }
     public Matiere updateMatiere(Matiere matiere)
     {    Matiere m = matiereRepo.findById(matiere.getId()).orElseThrow(()->new RuntimeException("not found"));
+         if(m.getNom().equals(matiere.getNom()))
+             throw new EntityAlreadyExistException("La Matiere : "+matiere.getNom()+" est deja existe");
         m.setNom(matiere.getNom());
 
 

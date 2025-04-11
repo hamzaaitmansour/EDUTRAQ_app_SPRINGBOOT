@@ -33,8 +33,6 @@ public class ChefFiliereController {
       @PostMapping("/seance/{id}")
     public ResponseEntity<Seance> addSeance(@PathVariable Long id,@RequestBody SeanceRequest seance)
       {
-
-          System.out.println(seance.getJour()+"\n\n");
           return new ResponseEntity<>(seanceService.addSeance(seance,id), HttpStatus.CREATED);
       }
     // delete seance

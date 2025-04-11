@@ -14,7 +14,5 @@ public class SeanceRequest {
     private Long id_salle;
     private String jour;
     private String heure;
-
     private String type;
-
 }

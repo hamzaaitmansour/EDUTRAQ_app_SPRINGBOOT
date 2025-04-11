@@ -1,6 +1,7 @@
 package fullStack.template.service;
 
 import fullStack.template.entities.Salle;
+import fullStack.template.exception.EntityAlreadyExistException;
 import fullStack.template.repository.SalleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,9 @@ public class SalleService {
     @Autowired
     private SalleRepo salleRepo;
     public Salle addSalle(Salle salle)
-    {
+    {   Salle s=salleRepo.findSalleByNom(salle.getNom());
+        if(s!=null)
+          throw  new EntityAlreadyExistException("La Salle "+salle.getNom()+"est deja existe");
         return salleRepo.save(salle);
     }
     public void deleteSalle(Long id)

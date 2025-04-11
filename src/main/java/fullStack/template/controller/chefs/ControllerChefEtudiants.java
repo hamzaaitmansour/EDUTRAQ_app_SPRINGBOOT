@@ -39,8 +39,6 @@ public class ControllerChefEtudiants {
         if (imageEntity == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
-
         Image response= new Image();
 
         response.setEmail(imageEntity.getEmail());
@@ -53,7 +51,7 @@ public class ControllerChefEtudiants {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEtudiant(@RequestBody UpdateEtudiant etudiant,@PathVariable Long id)
+    public ResponseEntity<?> updateEtudiant(@RequestBody UpdateEtudiant etudiant ,@PathVariable Long id)
     {
          etudiantService.updateEtudiantFromChef(etudiant,id);
          return ResponseEntity.accepted().build();

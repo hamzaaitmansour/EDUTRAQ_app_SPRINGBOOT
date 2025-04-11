@@ -1,5 +1,12 @@
 package fullStack.template.service;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import fullStack.template.dto.EtudiantProfileWeb;
 import fullStack.template.dto.EtudiantResponsedesktop;
 import fullStack.template.dto.Image;
 import fullStack.template.dto.UpdateEtudiant;
@@ -14,14 +21,22 @@ import fullStack.template.repository.EtudiantRepo;
 import fullStack.template.repository.FiliereRepo;
 import fullStack.template.repository.ProfRepo;
 import fullStack.template.repository.SeanceRepo;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+
 
 @Service
 public class EtudiantService {
@@ -246,5 +261,65 @@ public class EtudiantService {
         e.setTelephone(etudiant.getTelephone());
 
         etudiantRepo.save(e);
+    }
+
+    public byte[] exportStudentsAsPDF() throws IOException {
+        // Récupérer tous les étudiants
+        List<Etudiant> etudiants = etudiantRepo.findAll();
+
+        // Créer un flux de sortie en mémoire
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        // Créer un document PDF
+        PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf);
+
+        // Ajouter un titre
+        document.add(new Paragraph("Liste des Étudiants"));
+
+        // Créer une table avec 4 colonnes (par exemple : CNE, Prénom, Nom, Email)
+        float[] columnWidths = { 1, 3, 3, 3 };
+        Table table = new Table(columnWidths);
+
+        // Ajouter les en-têtes de la table
+        table.addCell(new Cell().add(new Paragraph("CNE")));
+        table.addCell(new Cell().add(new Paragraph("Prénom")));
+        table.addCell(new Cell().add(new Paragraph("Nom")));
+        table.addCell(new Cell().add(new Paragraph("Email")));
+
+        // Ajouter les données des étudiants
+        for (Etudiant etudiant : etudiants) {
+            table.addCell(new Cell().add(new Paragraph(etudiant.getCne())));
+            table.addCell(new Cell().add(new Paragraph(etudiant.getFirstname())));
+            table.addCell(new Cell().add(new Paragraph(etudiant.getLastname())));
+            table.addCell(new Cell().add(new Paragraph(etudiant.getEmail())));
+        }
+
+        // Ajouter la table au document
+        document.add(table);
+
+        // Fermer le document
+        document.close();
+
+        // Retourner le contenu du fichier PDF sous forme de tableau d'octets
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    public void updateProfileWeb(EtudiantProfileWeb etudiant) {
+        // Split the data URL if present
+        Etudiant e = etudiantRepo.findById(etudiant.getId()).orElseThrow(()->new EntityNotFoundException("Etudiant not found"));
+
+        String profileData=etudiant.getProfile();
+        if(profileData!=null && !profileData.isEmpty()){
+        String[] parts = profileData.split(",");
+        String base64Image = parts.length > 1 ? parts[1] : parts[0];
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        e.setProfile(imageBytes);}
+        if(etudiant.getPassword()!=null && !etudiant.getPassword().isEmpty()){
+           e.setPassword(encoder.encode(etudiant.getPassword()));
+        }
+        etudiantRepo.save(e);
+
     }
 }
