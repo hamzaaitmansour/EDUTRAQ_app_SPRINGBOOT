@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cordinateur")
 public class CordinateurController {
-
     @Autowired
     private FiliereService filiereService;
 
@@ -113,11 +112,8 @@ public class CordinateurController {
      // Profs
      @PostMapping("/prof")
      public ResponseEntity<Professeur> addProf(@Valid @RequestBody ProfRequestCordinateur professeur) {
-        Professeur f=new Professeur();
-        f.setEmail(professeur.getEmail());
-        f.setApogee(professeur.getApogee());
-        f.setAccount_complete(false);
-         return new ResponseEntity<>(profService.register(f), HttpStatus.CREATED);
+
+         return new ResponseEntity<>(profService.register(professeur), HttpStatus.CREATED);
      }
      @PutMapping("/prof")
      public ResponseEntity<Professeur> updateProf(@Valid @RequestBody ProfRequestCordinateur professeur) {

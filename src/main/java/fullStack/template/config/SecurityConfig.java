@@ -27,6 +27,9 @@ public class SecurityConfig {
     private UserAppService userAppService;
 
     @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Autowired
     private JwtFilter jwtFilter;
 
     @Bean
@@ -36,6 +39,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Désactiver CSRF car on utilise JWT
                 .cors(cors -> cors.configure(http)) // Activer CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Pas de session
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 🔥 ici on le place
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Autoriser l'authentification sans connexion
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

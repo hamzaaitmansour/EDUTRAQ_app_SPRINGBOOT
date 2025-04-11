@@ -21,7 +21,7 @@ public class AppHandlerException {
     {
         ErrorShared errorShared = ErrorShared.builder()
                 .code(409)
-                .message("entity Already Exist")
+                .message(ex.getMessage())
                 .timestamp(new Date())
                 .build();
         return new ResponseEntity<>(errorShared, HttpStatus.CONFLICT);

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateEtudiant {
+
     private String lastname;
     private String firstname;
     private String cne;

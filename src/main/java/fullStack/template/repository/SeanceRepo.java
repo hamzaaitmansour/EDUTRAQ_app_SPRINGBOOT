@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SeanceRepo extends JpaRepository<Seance,Long> {
@@ -14,5 +15,7 @@ public interface SeanceRepo extends JpaRepository<Seance,Long> {
   public List<Seance> findSeancesByFiliere(Filiere filiere);
   public List<Seance> findAllByProfesseur(Professeur professeur);
 
+
+  public Optional<Seance> findByProfesseurAndJourAndHeure(Professeur prof, String jour, String heure);
 
 }

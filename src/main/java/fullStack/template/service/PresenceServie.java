@@ -104,6 +104,7 @@ public class PresenceServie {
     public List<PresenceDResponse> getHistorique(PresenceHistRequest ps) {
         System.out.println("     "+ps.getFiliere_id());
         System.out.println("     "+ps.getMatiere_id());
+        System.out.println("    Tpe"+ps.getType());
 
         Filiere filiere=filiereRepo.findById(ps.getFiliere_id()).orElseThrow();
         Matiere matiere=matiereRepo.findById(ps.getMatiere_id()).orElseThrow();

@@ -2,10 +2,7 @@ package fullStack.template.service;
 
 import fullStack.template.dto.SeanceRequest;
 import fullStack.template.dto.SeanceResponse;
-import fullStack.template.entities.Filiere;
-import fullStack.template.entities.Matiere;
-import fullStack.template.entities.Salle;
-import fullStack.template.entities.Seance;
+import fullStack.template.entities.*;
 import fullStack.template.exception.EntityAlreadyExistException;
 import fullStack.template.exception.EntityNotFoundException;
 import fullStack.template.models.Etudiant;
@@ -33,32 +30,78 @@ public class SeanceService {
     private SalleRepo salleRepo;
     @Autowired
     private  EtudiantRepo etudiantRepo;
+    @Autowired
+    private NotificationRepo notificationRepo;
 
-public Seance addSeance(SeanceRequest s,Long id)
+    public Seance addSeance(SeanceRequest s,Long id)
 {   Seance seance=new Seance();
-    try{
+
         Professeur prof= profRepo.findById(id).orElseThrow();
+
+        Professeur user = profRepo.findById(s.getId_user()).orElseThrow();
+        Optional<Seance> sTest = seanceRepo.findByProfesseurAndJourAndHeure(user, s.getJour(), s.getHeure());
+        if (sTest.isPresent()) {
+            System.out.println("e dakhal");
+            throw new EntityAlreadyExistException("Se existe un seance");
+        }
         System.out.println("\n \n \n \n seance service working ... \n \n \n \n ");
        seance.setHeure(s.getHeure());
        seance.setJour(s.getJour());
        seance.setMatiere(matiereRepo.findById(s.getId_matiere()).get());
        seance.setFiliere(prof.getFiliere());
        seance.setType(s.getType());
-       seance.setProfesseur(profRepo.findById(s.getId_user()).get());
+       seance.setProfesseur(user);
        seance.setSalle(salleRepo.findById(s.getId_salle()).get());
         seanceRepo.save(seance);
 
-    }catch(EntityAlreadyExistException e)
-    {
-      e.printStackTrace();
-    }
+        Filiere filiere=seance.getFiliere();
+        List<Etudiant> LisEtudiant=filiere.getEtudiants();
+        for(Etudiant etudiant:LisEtudiant)
+        {
+            addNotificationUpdateEmploi(etudiant);
+        }
+
+        Notification notification=new Notification();
+        notification.setVu(false);
+        notification.setType("emlpoi");
+        notification.setMessage("une seance a éte programme le "+seance.getJour() +" pour la filiere "+seance.getFiliere().getNom()+" à  "+seance.getHeure());
+        notification.setDate(LocalDate.now());
+        notification.setUserApp(prof);
+        notificationRepo.save(notification);
+
+
     return seance;
 }
 
 public void deleteSeance(Long id)
 {
-    Seance seance=seanceRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("this is not found"));
+    Seance seance=seanceRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("this seaace  is not found"));
+    Professeur professeur=profRepo.findById(seance.getProfesseur().getId()).orElseThrow(()->new EntityNotFoundException("this professeur is not found"));
+    Filiere filiere=seance.getFiliere();
+    List<Etudiant> LisEtudiant=filiere.getEtudiants();
+    for(Etudiant etudiant:LisEtudiant)
+    {
+        addNotificationUpdateEmploi(etudiant);
+    }
+    Notification notification=new Notification();
+    // Tmoma khtad
+    notification.setVu(false);
+    notification.setType("emlpoi");
+    notification.setMessage("La seance de  "+seance.getMatiere().getNom() +"  Jour "+seance.getJour()+" Heure "+seance.getHeure() +"est annulée");
+    notification.setDate(LocalDate.now());
+    notification.setUserApp(professeur);
+    notificationRepo.save(notification);
     seanceRepo.delete(seance);
+}
+public void addNotificationUpdateEmploi(Etudiant et )
+{
+    Notification notification=new Notification();
+    notification.setVu(false);
+    notification.setType("emlpoi");
+    notification.setUserApp(et);
+    notification.setMessage("Emloi de temps  a ete modifiee le :"+LocalDate.now());
+    notification.setDate(LocalDate.now());
+    notificationRepo.save(notification);
 }
 
 public List<SeanceResponse> getAllByFiliere(Long id)

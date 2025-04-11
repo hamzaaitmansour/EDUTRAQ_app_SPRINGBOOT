@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 public class UserAppService implements UserDetailsService {
     @Autowired
@@ -22,6 +24,8 @@ public class UserAppService implements UserDetailsService {
     private JwtService jwtService;
 
     private BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(); // Injecté correctement
+    @Autowired
+    private UserAppRepo userAppRepo;
 
     public UserAppService() {}
 
@@ -45,7 +49,7 @@ public class UserAppService implements UserDetailsService {
         try {
             userDetails = loadUserByUsername(email);
         } catch (UsernameNotFoundException e) {
-            return "Fail"; // L'utilisateur n'existe pas
+            return "Email";
         }
 
         // Vérifier si le mot de passe correspond
@@ -78,4 +82,43 @@ public class UserAppService implements UserDetailsService {
         userApp.setTelephone(profile.getTelephone());
         userRepo.save(userApp);
     }
+    @Autowired
+    private EmailService emailService;
+    public void forgotPassword(String email) {
+        System.out.println(email);
+        UserApp user =userAppRepo.findByEmail(email);
+        if(user == null) {
+            throw  new EntityNotFoundException("User not found");
+        } String password = genererMotDePasseAlphanumerique();
+        user.setPassword(encoder.encode(password));
+        String sujet = "Réinitialisation de votre mot de passe - RoomifyEnsa";
+        String message = """
+Bonjour,
+
+Vous avez demandé à réinitialiser votre mot de passe RoomifyEnsa.
+
+Voici votre nouveau mot de passe : %s
+
+Par mesure de sécurité, nous vous recommandons de le modifier après votre prochaine connexion.
+
+Cordialement,
+L'équipe RoomifyEnsa
+""".formatted(password);
+
+        emailService.envoyerEmail(email, sujet, message);
+        userAppRepo.save(user);
+
+    }
+    public String genererMotDePasseAlphanumerique() {
+        String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder motDePasse = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < 10; i++) {
+            motDePasse.append(caracteres.charAt(random.nextInt(caracteres.length())));
+        }
+
+        return motDePasse.toString();
+    }
+
 }

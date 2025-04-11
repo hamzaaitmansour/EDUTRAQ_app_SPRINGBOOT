@@ -5,11 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+public class EtudiantProfileWeb {
 
-public class ProfSimple {
-
-    private Long id;
-    private String nom;
+   private String profile;
+   private Long id;
+   private String password;
 }
